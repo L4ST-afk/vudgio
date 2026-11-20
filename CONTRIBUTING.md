@@ -16,7 +16,7 @@
 ```bash
 python3 scripts/selftest.py                    # 冒烟自检须 PASS
 cd tests && python3 -m unittest discover        # 全绿（test_take_shots 需本机浏览器，超时可单列）
-# 体量闸（若环境里有太玉洞 Tagnodon 的 check_limits.py）
+# 体量闸（若环境里有 check_limits.py）
 python3 <tagnodon-scripts>/check_limits.py .   # 体量不超限
 ```
 
@@ -27,7 +27,7 @@ python3 <tagnodon-scripts>/check_limits.py .   # 体量不超限
 - **判据句写白话**：`⛔` 禁令、`⚠️` 边界、阈值、命令名、字段名、错误原文一律保留原样，不许压成形容词。
 - **数字带条件**：视口宽度、字号、时长、对比度写清适用面；没有条件的不写进表格。
 - **断言钉不变式，不钉实现参数**：不写「没人改过」型断言。
-- **一条判据配一个执行器**：写进 `SKILL.md` 判据账；没有执行器的降为说明，不冒充判据（禅院塔 §2.272）。
+- **一条判据配一个执行器**：写进 `SKILL.md` 判据账；没有执行器的降为说明，不冒充判据（判据要能被执行）。
 
 ## 引用外部来源
 

@@ -1,60 +1,89 @@
 # Vudgio · Change Log (English)
 
-> This is a human-readable ledger of changes, kept for future maintainers and agents.
-> Dates, commands, thresholds and check readings are kept verbatim from the Chinese original ([CHANGELOG.md](CHANGELOG.md)); if the two disagree, the Chinese ledger wins.
+> This file records **capability and criteria changes only**: what a version can do, how it differs from the previous one, and whether a threshold changed meaning.
+> Internal archaeology (source relationships, brand history, per-date work logs and review process) is kept in `INTERNAL-CHANGES.md` and is not shipped with the package.
 
-## 2026-11-20 · Focus visibility; hover vs. focus split (button-state audit)
+## v0.34.4 · 2026-11-20 — Validation timing, criteria corrected
 
-- Split hover and focus-visible responsibilities so keyboard focus is never signalled by hover styling alone.
-- `reviewer-manual` and `acceptance` gained a focus-visibility check; the three-state verdict (pass / fail / insufficient evidence) is unchanged.
+- Field state expanded from four to six: `pristine` / `prefilled` / `editing` / `blurred` / `submitted` / `dirty-after-submit`. `blurred` means "lost focus" only — value emptiness no longer splits the state; empty values are judged by the rule layer.
+- "Impossible by construction" values (letters in a phone field, 30 February) are handled as **input constraints**: the characters never enter, so there is no error state to show. Rejection must be reversible and explained; ⛔ never swallow the keystroke silently.
+- Three easy-to-miss implementation points: skip IME composition (`compositionstart`→`compositionend`); normalise pasted input (full-width, separators, country code) before judging; async validation needs all four — cancel the previous request, compare the response against the **current** value, never treat a failed request as valid, settle before submit.
+- Six acceptance items, including IME input and offline.
 
-## 2026-11-18 · Five volumes rewritten: expression fully localised
+## v0.34.3 · 2026-11-20 — New volume: validation timing
 
-- Reason: a line-by-line comparison against an archived external reference showed five volumes still shared substantial wording (materials 100%, style-explorer 97%, workdir 71%, motion 71%, visual-language 68%). Krat rule: criteria stay verbatim, expression is replaced wholesale.
-- Method: structure and order may change; numbers and commands do not. Headings renamed to this repo's plain speech (with `references/index.md` and cross-links synced); example blocks and table wording rewritten. No criterion deleted, no threshold changed.
-- Reading: offline checks all green; `check_limits.py` within bounds.
+- Added `references/validation-timing.md`: **when** to raise an error and when to clear it. Format errors on blur, required on blur, cross-field conflicts on the later field, and a full list on submit with focus moved to the first.
+- Errors clear per keystroke on that field only. Async validation starts at 400–600ms, with sequence numbers plus cancellation.
 
-## 2026-11-18 · Squircle path script (`squircle_path.mjs`)
+## v0.34.2 · 2026-11-20 — Waiver path for the ambiguous hue band
 
-- Generates superellipse (G2) corner paths; radius and smoothness are computed live from pixel size.
-- Explains why two approaches are unusable: glue-filter blur and `mask: paint()` filling black.
+- When a primary colour and a semantic colour fall inside the 15–40° band, a waiver can be registered: rationale ≥20 characters covering at least two of area / shape / position; the pair then reports `✓` with "N further pairs released by axis change", ⛔ never silently.
+- A waiver that matches nothing is reported as a stale waiver. Unregistered pairs still warn.
 
-## 2026-11-18 · Exit-code contract, shared layer, copy rewrite
+## v0.34.1 · 2026-11-20 — Hue cap semantics fixed
 
-- All six CLI entries follow one rule: `0` pass, `1` criterion failed, `2` usage/input error.
-- The three `.mjs` tools share `scripts/_cli.mjs` (`EXIT` / `usageError` / `runMain`); argument parsing stays per-tool.
+- 20° is a **per-side endpoint budget** (total travel from lightest to 500), not "5° per step". Reading it as 5°/step cuts compensation by about 90% and collapses the ramp into one hue at different lightness.
+- Two fold-point acceptance tests: the endpoint equals `min(natural endpoint, 20)` and the curve bends exactly once at 20; the total span equals `min(natural span, 30)` with one shared coefficient.
 
-## 2026-11-18 · Three external pickups (light path, follow-up menu, convention conflict)
+## v0.34.0 · 2026-11-20 — Hue capping becomes per-side proportional
 
-- Added the light path (six-line preamble + screenshot-driven edits + one review round + five delivery items).
-- Added the optional follow-up menu at delivery time; added the "project already has design conventions — surface the conflict" rule.
+- `hue_offset` returns the natural offset only; `ramp_offsets` applies two gates — per-side scaling to `--cap`, then whole-ramp scaling to `--cap-total`. Proportional scaling is order-independent and stable across base colours.
+- New "hue stall" criterion: adjacent steps on the same side differing by less than 1° fail.
 
-## 2026-11-18 · Skeleton, naming and declaration cleanup
+## v0.33.0 · 2026-11-20 — Hue rotation split into two meanings; palette gate
 
-- Method axis settled as constraint satisfaction; volume index regrouped by constraint lifecycle.
-- Local absolute paths removed from `sources.md`; brand prefix in process identifiers unified to `VUDGIO_*` / `vudgio-*`.
+- Hue rotation now has two distinct meanings — single-side endpoint and adjacent step — ⛔ never one number for both.
+- Added `scripts/audit_palette.py` with tests: contrast, cumulative hue travel and hue stall judged together; exit code usable as a delivery gate.
 
-## 2026-11-14 · Architecture v0.31.0 (end-to-end design contractor)
+## 2026-11-20 — Focus visibility; hover vs. focus
 
-- Four modes, 13 commands, seven-step flow, delivery gate, 58-volume index.
+- Focus must be visible (WCAG 2.4.7). ⛔ Never remove the focus ring for looks — that filters out keyboard and limited-mobility users.
+- Hover is for pointers, focus is for keyboards; they do not substitute for each other. Touch paths are covered by focus or a menu. State checklists gained `:focus-visible`.
 
-### Addendum · 2026-11-14, third wave (extractive merge + two towers)
+## 2026-11-18 — Five volumes rewritten
 
-- New gate: land `DESIGN.md` (five elements) before step 4; later pages only reference it.
-- Two disciplines: a checkable acceptance sentence in the constraint brief; three-state review verdict plus a "what this round did not cover" section (from Quojuta and Huagai).
+- Materials, style explorer, workdir, motion and visual language were rewritten in structure and wording; criteria and numbers untouched; shared lines dropped below 10%. Cross-references and `references/index.md` synced.
 
-## I. Why self-maintained, and why not git-tracked here
+## 2026-11-18 — Squircle path script
 
-This directory is maintained locally as its own project and does not follow any upstream version. Cold snapshots go through `snapshot` (mode-skill). Historical directory names are normalised to the current `.vudgio`; original wording lives in cold snapshots for archaeology.
+- Added `scripts/squircle_path.mjs`: emits G2 corner paths for `clip-path` or SVG, with radius and smoothness computed from actual pixel size. Samples densely per corner, then respaces by arc length so points do not crowd at 45°.
+- Two unusable approaches are documented: the `blur+contrast` glue filter blurs content; `mask: paint()` filling black does not clip.
 
-## II. What was changed locally
+## 2026-11-18 — Exit-code contract and shared layer
 
-Local volumes for mobile, B2B, chat interfaces, materials and media were added; vendor sales copy and "full version" recommendation machinery were removed. See [CHANGELOG.md](CHANGELOG.md) for the full per-date ledger with readings.
+- Six CLI entries follow one rule: `0` pass, `1` criterion failed, `2` usage or input error. Runtime failures stay `1`.
+- The three `.mjs` tools share `scripts/_cli.mjs` (exit constants, usage error, unified failure mapping); argument parsing stays per tool.
 
-## III. Rollback and recovery
+## 2026-11-18 — Light path, follow-up menu, convention conflict
 
-Restore from the `snapshot` cold archive; do not hand-edit a published `index.html`. Rebuild the product from `index.src.html` before publishing.
+- Added `references/light-path.md` for ordinary one-pager work: a six-line preamble confirmed once, batched screenshots, one review round, five delivery items.
+- Delivery may end with 1–3 optional next steps, the first marked "recommended"; skipped for small edits, confirmation stops, and unattended runs.
+- When a project already ships `DESIGN.md` or similar conventions, follow the project; state any conflict with these criteria in the delivery note.
 
-## IV. What not to do
+## 2026-11-18 — Skeleton, naming and declaration cleanup
 
-Do not run production builds or full test suites as a routine gate; do not let environment noise (auth failures, 404s) block a UI change; do not silently skip the six-state / six-check delivery gate.
+- Entry gained a "counter-examples (read first)" block of five, a "when to use / not use" pair, and a criteria ledger mapping tests to hard criteria.
+- The volume index moved to `references/index.md` (seven groups); the main file keeps three common entry points.
+- Scripts renamed to snake_case, verb + object: `take_shots.mjs`, `chrome_launcher.mjs`, `curate_media.mjs`, `prep_image.mjs`, `clip_audit.js`.
+
+## v0.31.0 · 2026-11-14 — Architecture upgrade: end-to-end design contractor
+
+- Scope widened from design judgement to end-to-end design work: pages, components, motion, design assets; no business logic, APIs or data layers.
+- Seven-step flow, 13 Chinese commands, four page types (persuade / operate / read / experience).
+- Seven new volumes: `routing`, `craft-floor`, `tokens`, `build-recipes`, `type-and-polish`, `interaction-feel`, `review-rubric`.
+- Added `check_contrast.py` (WCAG 4.5 / 3.0 plus perceptual luminance) and `emit_tokens.py` (ramp, saturation compensation, hue cap, grey temperature; writes tokens.css / theme.css / tokens.json / DESIGN.md).
+
+## Rollback and recovery
+
+A cold snapshot is the rollback point; the goal is to restore the one broken file, not the whole directory.
+
+1. Confirm the latest snapshot is usable before editing.
+2. For a single broken file, restore **that file**. ⛔ Never overwrite the whole directory — it takes later criteria with it.
+3. After restoring, run the suite: `cd tests && python3 -m unittest $(ls test_*.py | sed 's/.py//' | tr '\n' ' ') -q` (the list on disk is authoritative; ⛔ never paste an old string).
+4. When two statements conflict, keep the one that explains why. If neither does, delete both.
+
+## Boundaries
+
+- ⛔ No whole-directory restore; `diff` before restoring.
+- ⛔ No auto-updater that pulls a new version and overwrites the directory in place, and no scheduled job for one.
+- ⛔ This file is not the version source; `version` in `SKILL.md` is.

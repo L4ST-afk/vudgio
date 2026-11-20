@@ -104,7 +104,7 @@ https://www.apache.org/licenses/LICENSE-2.0
 
 ## 其余来源
 
-refactoring-ui、apple-design、design-taste-frontend、教院塔 Quojuta、禅院塔 Zojuta、华盖心经、web-design-engineer 均为本机／社区技能，本项目只取判据形态并在 `references/sources.md` 逐条登记出处与边界，不转载正文，故无第三方许可全文需附。若其中任一来源要求署名，以 `references/sources.md` 该条为准。
+refactoring-ui、apple-design、design-taste-frontend、web-design-engineer 及若干本机私有工作法档，本项目只取判据形态并在 `references/sources.md` 逐条登记出处与边界，不转载正文，故无第三方许可全文需附。若其中任一来源要求署名，以 `references/sources.md` 该条为准。
 
 ## 自建兜底主题（非第三方资产）
 
