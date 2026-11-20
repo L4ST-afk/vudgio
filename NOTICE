@@ -24,9 +24,8 @@ Copyright (c) 2026 L4ST-afk
   只取材质语义判据，不引入其实现。
   Licensed under the MIT License
 
-本项目另从以下本机／社区技能移植了判据形态（只取算法与判据、不转载正文），逐条出处与边界见 references/sources.md：
+本项目另从以下来源移植了判据形态（只取算法与判据、不转载正文），逐条出处与边界见 references/sources.md：
   refactoring-ui（约束与诊断）、apple-design（手感）、design-taste-frontend（反 AI 腔）、
-  教院塔 Quojuta（三态结论）、禅院塔 Zojuta（断言账与检查器工程）、
-  华盖心经（诚实缺口）、web-design-engineer（单文件边界）。
+  web-design-engineer（单文件边界），以及若干本机私有工作法档（三态结论、断言账与检查器工程、诚实缺口格式）。
 
 除上述署名外，判据正文为本项目独立撰写。MIT 许可全文见 LICENSE；第三方许可全文见 THIRD_PARTY_NOTICES.md。
