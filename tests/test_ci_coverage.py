@@ -67,6 +67,41 @@ class TestCiCoverage(unittest.TestCase):
             missing = [t for t in disk if t not in line]
             self.assertEqual(missing, [], "%s 漏列：%s" % (f, ", ".join(missing)))
 
+    def test_subprocess_text_calls_declare_utf8(self):
+        """text=True 的子进程必须显式 encoding='utf-8'。
+
+        Windows 上它默认按 cp1252 解码，被测脚本一 print 就崩在 _readerthread 里，
+        报出来的却是断言失败——排查会绕远路。
+        """
+        import ast
+        import glob
+        bad = []
+        for path in sorted(glob.glob(os.path.join(HERE, "test_*.py")) +
+                           glob.glob(os.path.join(ROOT, "scripts", "*.py"))):
+            tree = ast.parse(read(path))
+            for node in ast.walk(tree):
+                if not isinstance(node, ast.Call):
+                    continue
+                fn = node.func
+                if not (isinstance(fn, ast.Attribute) and getattr(fn.value, "id", None) == "subprocess"):
+                    continue
+                kw = {k.arg for k in node.keywords if k.arg}
+                text = "text" in kw or "universal_newlines" in kw
+                if text and "encoding" not in kw:
+                    bad.append("%s:%d" % (os.path.basename(path), node.lineno))
+        self.assertEqual(bad, [], "子进程按本地编码解码，Windows 必炸：%s" % ", ".join(bad))
+
+    def test_no_cache_dirs_in_version_control(self):
+        """缓存目录不进库：它们每台机器不同，进库只会制造噪音与冲突。"""
+        import subprocess
+        out = subprocess.run(["git", "ls-files"], cwd=ROOT, capture_output=True,
+                             text=True, encoding="utf-8", check=True).stdout
+        tracked = [l for l in out.splitlines()
+                   if l.startswith((".pytest_cache/", "__pycache__/"))
+                   or "/__pycache__/" in l or l.endswith(".pyc")]
+        self.assertEqual(tracked, [], "版本库里还有缓存：%s" % ", ".join(tracked[:5]))
+
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
