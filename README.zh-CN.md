@@ -2,6 +2,8 @@
 
 # 浮龟Vudgio
 
+中文名浮龟，拉丁名 Vudgio，取「龟伏于器，水未至不动」；包名与目录名一律 `vudgio`，搜「浮龟」或 Vudgio 都能找到。
+
 <img src="docs/cover.jpg" alt="浮龟 Vudgio — 六边鳞格底、中央一颗黄绿棱石、左下 VUDGIO；题诗「龟伏于器，水未至不动，型未辨不发」" width="720">
 
 ## 安装

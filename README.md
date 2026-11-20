@@ -2,11 +2,13 @@ English · [中文](README.zh-CN.md)
 
 # 浮龟Vudgio
 
+Chinese name 浮龟 (fú guī), Latin name Vudgio — the turtle that stays put until the water arrives. Package and directory name are `vudgio`; search either 浮龟 or Vudgio.
+
 <img src="docs/cover.jpg" alt="浮龟 Vudgio — hexagonal-scale ground, a yellow-green facet at centre, VUDGIO at lower left; inscription: the turtle stays still until the water comes and the type is told apart" width="720">
 
 ## Install
 
-Unzip the package (unzip it anywhere), then move the whole `vudgio/` folder into your agent's skills directory — the skills 根目录 your host scans. Verify with:
+Unzip the package (unzip it anywhere), then move the whole `vudgio/` folder into your agent's skills directory — the skills root your host scans. Verify with:
 
 ```bash
 cd vudgio
