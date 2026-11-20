@@ -17,7 +17,7 @@
 python3 scripts/selftest.py                    # 冒烟自检须 PASS
 cd tests && python3 -m unittest discover        # 全绿（test_take_shots 需本机浏览器，超时可单列）
 # 体量闸（若环境里有 check_limits.py）
-python3 <tagnodon-scripts>/check_limits.py .   # 体量不超限
+python3 <检查脚本目录>/check_limits.py .   # 体量不超限
 ```
 
 体量闸是库级共享脚本，不一定随包附带；没有它时至少核两条硬线：`SKILL.md` ≤500 行、`references/*.md` >100 行须有 `## 目录` ＋ ≥3 锚点链接。
