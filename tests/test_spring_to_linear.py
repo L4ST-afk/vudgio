@@ -59,7 +59,7 @@ class TestSpringToLinear(unittest.TestCase):
         self.assertEqual(run("--target", "5")[0], 2)
 
     def test_target_bounds(self):
-        """值域 40–1200（禅院塔 §2.152：改阈值要覆盖边界两侧）。"""
+        """值域 40–1200（改阈值要覆盖边界两侧）。"""
         for ms in (40, 1200):
             rc, out = run("--target", str(ms), "--json")
             self.assertEqual(rc, 0, "%dms 应当接受" % ms)

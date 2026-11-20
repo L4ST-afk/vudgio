@@ -27,7 +27,7 @@ metadata:
 
 | 层 | 管什么 | 正本 |
 |---|---|---|
-| C 采集 | 约束从哪来、产品事实与分型 | [约束采集](references/c01-constraint-intake.md)（见 [sources](references/sources.md)） |
+| C 采集 | 约束从哪来、产品事实与分型 | [约束采集](references/sources.md) |
 | D 判据 | 令牌、对比度、组件与排版的可判阈值 | [令牌](references/tokens.md)、[质量地板](references/craft-floor.md)、[组件配方](references/build-recipes.md)、[校验时机](references/validation-timing.md)、[排版与收尾](references/type-and-polish.md) |
 | S 求解 | 布局、材质、素材、动效的满足解库 | [布局与视口](references/layout-and-viewport.md)、[素材](references/media.md)、[动效](references/motion.md)、[滚动约束](references/scroll-narrative.md) |
 | M 手感 | 可中断、速度交接、拖拽连续性 | [手感](references/interaction-feel.md)、[桌面组件](references/components-motion.md) |

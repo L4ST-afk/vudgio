@@ -292,7 +292,7 @@ def main() -> int:
     p4 = os.path.join(a.out, "tokens.json")
     open(p4, "w", encoding="utf-8").write(json.dumps(payload, indent=2) + "\n")
 
-    # 目标态复读：写成功不等于落对了（禅院塔 §2.35）。四个文件各自回收一次、查出关键行。
+    # 目标态复读：写成功不等于落对了。四个文件各自回收一次、查出关键行。
     expect = {p1: "--color-%s-500:" % name, p2: "@theme",
               p3: "DESIGN（%s）" % name, p4: "\"500\""}
     for path, token in expect.items():

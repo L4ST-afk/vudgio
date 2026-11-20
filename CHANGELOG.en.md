@@ -1,7 +1,7 @@
 # Vudgio · Change Log (English)
 
 > This file records **capability and criteria changes only**: what a version can do, how it differs from the previous one, and whether a threshold changed meaning.
-> Internal archaeology (source relationships, brand history, per-date work logs and review process) is kept in `INTERNAL-CHANGES.md` and is not shipped with the package.
+> Internal archaeology (source relationships, brand history, per-date work logs and review process) is kept in an internal file and is not shipped with the package.
 
 ## v0.34.4 · 2026-11-20 — Validation timing, criteria corrected
 
