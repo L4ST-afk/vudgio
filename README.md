@@ -37,11 +37,11 @@ It writes pages, components, motion and design assets directly (tokens, icons, p
 
 ## Layout
 
-- `SKILL.md` — positioning, four modes, 13 commands, seven-step flow, delivery gate, index of 58 volumes (volume index in `references/index.md`), size budget
+- `SKILL.md` — positioning, four modes, 13 commands, seven-step flow, delivery gate, index of 59 volumes (volume index in `references/index.md`), size budget
 - `references/` — fifty-odd volumes of specific criteria, loaded per command and per problem, never end to end; new: `routing`, `craft-floor`, `tokens`, `build-recipes`, `type-and-polish`, `interaction-feel`, `review-rubric`
 - `scripts/` — comparison board, screenshots, media curation, image processing, plus `check_contrast.py` (WCAG gate), `emit_tokens.py` (ramp generation and token export), and `spring_to_linear.py` (spring k/c → CSS `linear()` curve, or `--target 200 --overshoot 8` to solve back from the duration you want), `clip_audit.js` (shadow-clipping audit to paste into the browser; gate is `cut === 0`)
 - `demo/` — `index.html` (the self-demo page: three motions, a hard-edged switch, a reduce-motion toggle) plus `motion-demo.gif` recorded from it
-- `tests/` — `cd tests && python3 -m unittest test_check_contrast test_emit_tokens test_measure_reference test_curate_media test_workdir test_spring_to_linear test_refs_toc test_refs_auth test_demo_page test_squircle_path test_ci_coverage test_clip_audit test_build_explorer test_prep_image test_take_shots -q` (15 modules; `test_take_shots` needs a local browser and is the slow one)
+- `tests/` — `cd tests && python3 -m unittest test_check_contrast test_emit_tokens test_audit_palette test_measure_reference test_curate_media test_workdir test_spring_to_linear test_refs_toc test_refs_auth test_demo_page test_squircle_path test_ci_coverage test_clip_audit test_build_explorer test_prep_image test_take_shots -q` (16 modules; `test_take_shots` needs a local browser and is the slow one)
 
 ## Seeing the motion
 

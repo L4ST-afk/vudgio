@@ -105,3 +105,7 @@ https://www.apache.org/licenses/LICENSE-2.0
 ## 其余来源
 
 refactoring-ui、apple-design、design-taste-frontend、教院塔 Quojuta、禅院塔 Zojuta、华盖心经、web-design-engineer 均为本机／社区技能，本项目只取判据形态并在 `references/sources.md` 逐条登记出处与边界，不转载正文，故无第三方许可全文需附。若其中任一来源要求署名，以 `references/sources.md` 该条为准。
+
+## 自建兜底主题（非第三方资产）
+
+`assets/themes/friendship-bldg.css` 是本项目独立维护的自建主题，不属于第三方资产，故无外部许可全文需附。其配色意象来自上海展览中心（原中苏友好大厦），由本机自建皮肤改造并删去 deck/demo 专属规则；头部注释自述来源与「非默认、仅兜底」约束。改造前后源文件 sha256 未变（只读复制）。

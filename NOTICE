@@ -5,6 +5,8 @@ Copyright (c) 2026 L4ST-afk
 
 本项目随包附带 Alpine.js 3.17.4（MIT，assets/vendor/）与 Instrument Serif 字体（SIL OFL 1.1，assets/fonts/）；其许可全文见 THIRD_PARTY_NOTICES.md 与随附 OFL.txt。
 
+`assets/themes/friendship-bldg.css` 是本项目独立维护的自建兜底主题（从上海展览中心意象做的乳黄水刷石／汉白玉／水磨石／鎏金配色），由本机另一 skill 的自建皮肤改造而来，非第三方资产、不涉及 MIT 或其他上游许可；仅作辨识度兜底，非默认风格。
+
 本项目并入或改写了下列来源的规则形态与判据，特此声明（正文不转载其实现；完整许可见 THIRD_PARTY_NOTICES.md，逐条取用见 references/sources.md）：
 
   impeccable（架构：四型、命令面、质量地板）

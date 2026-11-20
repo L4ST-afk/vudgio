@@ -37,11 +37,11 @@ python3 scripts/selftest.py          # 期望 PASS，退出码 0
 
 ## 目录
 
-- `SKILL.md`：定位、四型、13 条命令、七步主流程、交付门、58 卷索引（卷册索引在 `references/index.md`）、体量预算
+- `SKILL.md`：定位、四型、13 条命令、七步主流程、交付门、59 卷索引（卷册索引在 `references/index.md`）、体量预算
 - `references/`：五十余卷专项判据，按命令首读 + 按问题顺带，不整卷通读；新增 `routing` / `craft-floor` / `tokens` / `build-recipes` / `type-and-polish` / `interaction-feel` / `review-rubric`
 - `scripts/`：对比页生成、截图、素材检索、图片处理，以及 `check_contrast.py`（WCAG 门）、`emit_tokens.py`（色阶 + 令牌导出）、`spring_to_linear.py`（弹簧 k/c → CSS `linear()` 曲线；也可 `--target 200 --overshoot 8` 从想要的时长反解）、`clip_audit.js`（阴影裁切审计，贴进浏览器执行，判据 `cut === 0`）
 - `demo/`：`index.html`（自我示范页：三处动效、生硬版对照开关、减少动态效果开关）与从它录出来的 `motion-demo.gif`
-- `tests/`：`cd tests && python3 -m unittest test_check_contrast test_emit_tokens test_measure_reference test_curate_media test_workdir test_spring_to_linear test_refs_toc test_refs_auth test_demo_page test_squircle_path test_ci_coverage test_clip_audit test_build_explorer test_prep_image test_take_shots -q`（15 件；`test_take_shots` 需本机浏览器，最慢）
+- `tests/`：`cd tests && python3 -m unittest test_check_contrast test_emit_tokens test_audit_palette test_measure_reference test_curate_media test_workdir test_spring_to_linear test_refs_toc test_refs_auth test_demo_page test_squircle_path test_ci_coverage test_clip_audit test_build_explorer test_prep_image test_take_shots -q`（16 件；`test_take_shots` 需本机浏览器，最慢）
 
 ## 动效长什么样
 

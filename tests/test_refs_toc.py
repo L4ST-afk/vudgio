@@ -1,6 +1,6 @@
 """本库自己的「超百行必有真目录」闸（补 太玉洞 在这里的盲区）。
 
-背景：库级 `check_limits.py` 见到 skill 根有 LICENSE 就把所有 references
+背景：`太玉洞Tagnodon/scripts/check_limits.py` 见到 skill 根有 LICENSE 就把所有 references
 当「外部件」，>100 行只报 info、⛔ 不判红（2026-11-17 那版为防拆外部件加的口子）。
 浮龟根有 LICENSE，于是这条闸在本库**整片失效**——连自己写的卷也不再被查。
 

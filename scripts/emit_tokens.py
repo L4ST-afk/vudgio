@@ -4,7 +4,8 @@
 算法（⛔ 不手调 hex，手调必漂）：
   §5.3.3 base(500) -> 两端(900/100) -> 二分(700/300) -> 再二分(800/600/400/200)
   §5.4   饱和度随明度离 50% 变远而抬高，让彩度看起来稳定
-  §5.4.2 色相朝亮端（60/180/300）或暗端（0/120/240）旋转，硬帽 20-30 度
+  §5.4.2 色相朝亮端（60/180/300）或暗端（0/120/240）旋转：单步偏移 ≤--cap（默认 20°），
+         整条色阶两端累计 ≤--cap-total（默认 30°）。两个方向各自封顶会相加，必须另设总预算。
   §5.5.1 灰阶带温度，两端各做补偿
 动效令牌取 emil-design-eng（MIT）的四条缓动与时长档。
 
@@ -65,9 +66,14 @@ def signed_delta(frm: float, to: float) -> float:
     return (to - frm + 180.0) % 360.0 - 180.0
 
 
-def rotate_hue(h0: float, l0: float, lt: float, cap: float, prefer: str) -> float:
+def hue_offset(h0: float, l0: float, lt: float, cap: float, prefer: str) -> float:
+    """单个 stop 相对 500 的自然色相偏移（有符号，未封顶）。
+
+    封顶不在这里做：逐级夹会把端部几级压成同一偏移（实测蓝 100/200 同为 -20°），
+    转出来的色相既不递增也可能反向。交给 build_ramp 按侧整条等比压。
+    """
     if lt == l0:
-        return h0
+        return 0.0
     lighten = lt > l0
     targets = BRIGHT_HUES if lighten else DARK_HUES
     if prefer in ("warm", "cool"):
@@ -78,12 +84,38 @@ def rotate_hue(h0: float, l0: float, lt: float, cap: float, prefer: str) -> floa
         nearest = min(targets, key=lambda t: abs(signed_delta(h0, t)))
     span = (100.0 - l0) if lighten else l0
     if span <= 0:
-        return h0
+        return 0.0
     progress = min(1.0, abs(lt - l0) / span)
-    return h0 + max(-cap, min(cap, signed_delta(h0, nearest) * progress))
+    return signed_delta(h0, nearest) * progress
 
 
-def build_ramp(base, lightest, darkest, strength, cap, extended, prefer):
+def rotate_hue(h0: float, l0: float, lt: float, cap: float, prefer: str) -> float:
+    return h0 + hue_offset(h0, l0, lt, cap, prefer)
+
+
+def ramp_offsets(h0, l0, L, cap, prefer, cap_total=30.0):
+    """九级各自相对 500 的色相偏移（有符号），含两道闸。
+
+    ① 单步帽 cap：同侧超限时**整侧等比压**，⛔ 不逐级硬夹——硬夹会把端部几级
+       压成同一个偏移（实测蓝 100/200 都顶到 -20°），色相既不递增、也可能反向。
+    ② 总预算 cap_total:两端跨度超限时整条等比压。两道都用比例，跟级序无关。
+    """
+    offsets = {s: (0.0 if s == 500 else hue_offset(h0, l0, L[s], cap, prefer)) for s in L}
+    for sign in (1, -1):
+        side = [abs(o) for o in offsets.values() if o * sign > 0]
+        if side and max(side) > cap:
+            k_side = cap / max(side)
+            offsets = {s: (o * k_side if o * sign > 0 else o) for s, o in offsets.items()}
+    spread = max(offsets.values()) - min(offsets.values())
+    if cap_total and spread > cap_total:
+        k = cap_total / spread
+        offsets = {s: o * k for s, o in offsets.items()}
+        print("提示：两端累计色相漂移 %.1f° 超过 --cap-total %.0f°，已等比压到 %.1f°"
+              % (spread, cap_total, cap_total), file=sys.stderr)
+    return offsets
+
+
+def build_ramp(base, lightest, darkest, strength, cap, extended, prefer, cap_total=30.0):
     h0, s0, l0 = base
     if not (darkest < l0 < lightest):
         raise SystemExit("基色明度 %.0f%% 必须落在最暗 %.0f%% 与最亮 %.0f%% 之间"
@@ -98,10 +130,11 @@ def build_ramp(base, lightest, darkest, strength, cap, extended, prefer):
     if extended:
         L[50] = lightest + (100.0 - lightest) * 0.55
         L[950] = darkest * 0.55
+    offsets = ramp_offsets(h0, l0, L, cap, prefer, cap_total)
     out = {}
     for stop in sorted(L):
         lt = L[stop]
-        h = h0 if stop == 500 else rotate_hue(h0, l0, lt, cap, prefer)
+        h = h0 + offsets[stop]
         s = s0 if stop == 500 else compensate(s0, l0, lt, strength)
         out[stop] = hsl_to_hex(h, s, lt)
     return out
@@ -217,7 +250,10 @@ def main() -> int:
     ap.add_argument("--lightest", type=float, default=96.0)
     ap.add_argument("--darkest", type=float, default=21.0)
     ap.add_argument("--strength", type=float, default=0.55)
-    ap.add_argument("--cap", type=float, default=20.0)
+    ap.add_argument("--cap", type=float, default=20.0,
+                    help="单个 stop 相对 500 的色相偏移上限（度）")
+    ap.add_argument("--cap-total", type=float, default=30.0,
+                    help="整条色阶 100↔900 两端累计色相漂移上限（度）；0 表示不限制")
     ap.add_argument("--toward", choices=("auto", "warm", "cool"), default="auto")
     ap.add_argument("--extended", action="store_true", help="加 50/950 两级")
     ap.add_argument("--name", default=None, help="色阶名（默认 brand 或 neutral）")
@@ -241,7 +277,7 @@ def main() -> int:
     else:
         ap.error("需要 --base 或 --grey")
 
-    ramp = build_ramp(base, lightest, darkest, a.strength, a.cap, a.extended, a.toward)
+    ramp = build_ramp(base, lightest, darkest, a.strength, a.cap, a.extended, a.toward, a.cap_total)
     payload = {name: {str(k): v for k, v in ramp.items()}}
 
     if a.json:

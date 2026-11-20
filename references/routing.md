@@ -18,7 +18,7 @@
 | **距** | 间距、留白、对齐、挤/空 | [视觉语言](visual-language.md) | [布局与视口](layout-and-viewport.md) | 布局调整 |
 | **动** | 动效、过渡、手感、卡顿 | [动效](motion.md) | [手感](interaction-feel.md)、[组件动效契约](components-motion.md) | 动效方案 + 代码 |
 | **图** | 配图、素材、主视觉、生图 | [素材](media.md) | [生图激发](image-ideation.md) | 素材、提示词、占位 |
-| **严** | 边界、空态、错误、i18n、极端数据 | [质量地板](craft-floor.md) | [质量验收](acceptance.md)、平台防踩清单 | 硬化清单 + 改动 |
+| **严** | 边界、空态、错误、i18n、极端数据 | [质量地板](craft-floor.md) | [质量验收](acceptance.md)、[校验时机](validation-timing.md)、平台防踩清单 | 硬化清单 + 改动 |
 | **记** | 沉淀规范、抽 token、写 DESIGN / 产品事实 | [令牌](tokens.md) | [任务工作区](workdir.md) | DESIGN.md / PRODUCT.md / tokens |
 
 ## 无参数时

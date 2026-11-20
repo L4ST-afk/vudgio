@@ -5,7 +5,7 @@ name: tests
 on:
   push:
     branches: [main]
-    paths: ["scripts/**", "tests/**", "assets/**", "references/**", "SKILL.md", "demo/**", "docs/**", "README*.md", "CHANGELOG*.md", ".github/workflows/tests.yml"]
+    paths: ["scripts/**", "tests/**", "assets/**", "references/**", "SKILL.md", ".github/workflows/tests.yml"]
   pull_request:
     branches: [main]
   workflow_dispatch:
@@ -30,7 +30,7 @@ jobs:
         run: |
           if [[ "${{ github.event_name }}" != "pull_request" ]]; then
             echo "browser=1" >> "$GITHUB_OUTPUT"
-          elif git diff --name-only origin/main...HEAD | grep -E '^(scripts/|tests/|assets/|demo/|docs/|SKILL\.md$|README.*\.md$|\.github/workflows/tests\.yml$)' >/dev/null; then
+          elif git diff --name-only origin/main...HEAD | grep -E '^(scripts/|tests/|assets/|\.github/workflows/tests\.yml$)' >/dev/null; then
             echo "browser=1" >> "$GITHUB_OUTPUT"
           else
             echo "browser=0" >> "$GITHUB_OUTPUT"
@@ -61,7 +61,7 @@ jobs:
           python - <<'PY'
           import os, sys, unittest
           sys.path.insert(0, os.path.abspath("tests"))
-          modules = ["test_check_contrast", "test_emit_tokens", "test_clip_audit", "test_measure_reference", "test_curate_media", "test_workdir", "test_spring_to_linear", "test_refs_toc", "test_refs_auth", "test_demo_page", "test_squircle_path", "test_ci_coverage"]
+          modules = ["test_check_contrast", "test_emit_tokens", "test_audit_palette", "test_clip_audit", "test_measure_reference", "test_curate_media", "test_workdir", "test_spring_to_linear", "test_refs_toc", "test_refs_auth", "test_demo_page", "test_squircle_path", "test_ci_coverage"]
           suite = unittest.defaultTestLoader.loadTestsFromNames(modules)
           result = unittest.TextTestRunner(verbosity=2).run(suite)
           sys.exit(not result.wasSuccessful())

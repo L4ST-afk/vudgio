@@ -10,6 +10,7 @@
 ## D 判据（定达成判据：从约束挑出可机判的硬判据，带命令/阈值）
 
 - `craft-floor.md` — 质量地板“九查”，界面可交付前的底线判据（对比度、间距、字体、动效、状态、文案、覆盖等）。
+- `validation-timing.md` — 输入校验的时机（晚报错、早消错；四态表、四类规则、异步竞态、提交列全）。
 - `type-and-polish.md` — 排版与收尾判据（字号层级、行宽与行高、字重、三个文字色、字距、光学尺寸、收尾九条）。
 
 ## S 求解（构建满足解：按约束选组件/字/色/动效，先过结构约束再过视觉约束）
@@ -19,18 +20,11 @@
 
 ## M 手感（动效与手感：可中断、速度交接、1:1、橡皮筋等）
 
-- `motion.md` — 动效约束与手感参数；四问决策、时长表、性能红线。
-- `interaction-feel.md` — 可中断、速度交接、1:1、橡皮筋与动量投影的交互手感约束。
-- `components-motion.md` — 桌面 Agent 组件与动效满足解：组件契约、反馈与降级。
-- `desktop-pitfalls.md` — 桌面端踩坑与防御规约：阴影裁切、多窗口、拖拽死锁。
-- `chat-interface.md` — 聊天／会话式界面判据：消息流、输入区、状态与可读性。
-- `agent-interaction.md` — 桌面 Agent 交互判据：任务控制权、过程可见、可介入可收回。
+- 本批次暂无（`motion.md`、`interaction-feel.md`、`components-motion.md`、`desktop-pitfalls.md`、`chat-interface.md`、`agent-interaction.md` 在后续批次重写）。
 
 ## P 平台（平台纵深：B 端、移动端、桌面与聊天界面的专项判据）
 
-- **B 端／后台**：`01-design-tokens-and-foundations.md`（索引卷，含 -1／-2 子卷）、`02-primitive-components.md`、`03-overlays-dialog-drawer.md`、`04-composite-components.md`、`05-page-templates-and-archetypes.md`、`06-component-priority-and-anti-patterns.md`、`07-design-system-audit-checklist.md`。
-- **移动端**：`01-mobile-foundations-and-viewport.md`（物理约束）、`02-ios-vs-android-design-paradigms.md`、`03-mobile-navigation-and-gestures.md`、`04-touch-inputs-and-soft-keyboard.md`、`05-mobile-overlays-and-bottom-sheet.md`、`06-mobile-archetypes-and-feed-lists.md`、`07-mobile-pitfalls-and-audit-checklist.md`。
-- `acceptance.md` — 桌面 Agent UI 质量验收清单：六态六查与证据格式。
+- 本批次暂无（B 端系列、移动端系列、`acceptance.md` 等在后续批次重写）。
 
 ## V 验收（判据验收：派独立评审逐条验证，三态结论过／不过／证据不足）
 

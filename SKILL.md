@@ -8,11 +8,12 @@ allowed-tools:
   - Bash(node *squircle_path.mjs*)
   - Bash(python3 *build_explorer.py*)
   - Bash(python3 *check_contrast.py*)
+  - Bash(python3 *audit_palette.py*)
   - Bash(python3 *emit_tokens.py*)
   - Bash(python3 *spring_to_linear.py*)
   - Bash(python3 *measure_reference.py*)
 metadata:
-  version: "0.32.0+fugu20261120"
+  version: "0.34.4+fugu20261120"
   compatibility: "核心为宿主中立的文本流程，不依赖其他 Skill 或指定模型。可选脚本需要 Python 3.10+ 标准库或 Node 18+；产物仅需现代浏览器；本机地址候选需要对应的本地开发服务器在运行。实际视觉验收需要看图能力；交互验收需要可操作环境；独立评审需要隔离上下文且能看图的执行者。"
 ---
 
@@ -26,8 +27,8 @@ metadata:
 
 | 层 | 管什么 | 正本 |
 |---|---|---|
-| C 采集 | 约束从哪来、产品事实与分型 | [判据来源](references/sources.md)（第 1 步采集约束的来源登记） |
-| D 判据 | 令牌、对比度、组件与排版的可判阈值 | [令牌](references/tokens.md)、[质量地板](references/craft-floor.md)、[组件配方](references/build-recipes.md)、[排版与收尾](references/type-and-polish.md) |
+| C 采集 | 约束从哪来、产品事实与分型 | [约束采集](references/c01-constraint-intake.md)（见 [sources](references/sources.md)） |
+| D 判据 | 令牌、对比度、组件与排版的可判阈值 | [令牌](references/tokens.md)、[质量地板](references/craft-floor.md)、[组件配方](references/build-recipes.md)、[校验时机](references/validation-timing.md)、[排版与收尾](references/type-and-polish.md) |
 | S 求解 | 布局、材质、素材、动效的满足解库 | [布局与视口](references/layout-and-viewport.md)、[素材](references/media.md)、[动效](references/motion.md)、[滚动约束](references/scroll-narrative.md) |
 | M 手感 | 可中断、速度交接、拖拽连续性 | [手感](references/interaction-feel.md)、[桌面组件](references/components-motion.md) |
 | V 验收 | 三态结论、派发协议、证据格式 | [评审规则](references/review-rubric.md)、[判据验收者](references/reviewer-manual.md)、[视觉派发](references/visual-review.md) |
@@ -38,7 +39,7 @@ metadata:
 五条真踩坑，每条的「重来怎么做」就是现在那道闸的来历：
 
 1. **评审交接只给形容词**：写「太挤」「层级不清」，执行者只能把 padding 改小 2px，位置仍靠猜、原对齐还被改坏。重来：定位／原值→期望值／有界上下文三样缺一退回补齐；动效意见另加 `Before / After / Why`。
-2. **三个方向做成三个明度**：一亮一暗一暖，色相家族和骨架没差，无从比较。重来：先定色相家族或材质感，明暗只是结果。
+2. **三个方向做成三个明度**：一亮一暗一暖，色相家族和骨架没差，无从比较。重来：先定色相家族或材质感，明暗只是结果。界面整体太素、像组件库默认时，按 [质量地板](references/craft-floor.md) 的「辨识度兜底」补一处，⛔ 套现成主题。
 3. **审计全落在视觉**：结构层（组件打散、变量没绑、重复节点）一门没查，页面看着顺、改起来散。重来：先过结构判据再谈视觉。
 4. **整目录自更新器原地覆盖**：外部拉新版覆盖本目录，缺「本目录已被大改」上下文，等于抹掉本地判据。重来：先确认冷存档快照可作回滚点，再让外部件碰目录。
 5. **文档教跑不存在的脚本**：验收卷写跑 `clip-audit.js`，文件从来不在盘，交付门成空话。重来：文档点名的每个脚本必须能被 `test_refs_auth` 与 `test_ci_coverage` 查到。
@@ -97,6 +98,8 @@ metadata:
 | 单组件做到极致 | 七步全走，范围只这个组件，只做一个解：先定视觉主角、从它取色、力气集中在主操作那一刻 |
 | 存量项目优化 UI／改流程／加功能 | 先分清哪种：优化 UI 可重定偶然形成的视觉默认值，品牌资产保留；改流程与加功能沿用现有视觉。盘点页面、令牌、共享组件，留基线截图，从源头改 |
 | 截图还原 | 按 [布局与视口](references/layout-and-viewport.md) 的「精准还原」，以参考图为视觉与版式基线 |
+| 把已认可的原型落地成真实项目代码 | 原型只当视觉标准：不内嵌 iframe、不把原型的样式和脚本整段搬进工程；用项目现有组件、样式变量和组件库实现，⛔ 引入同类的第二个库 |
+| 整理／沉淀项目设计规范（几份文档打架、文档与代码对不上、要从现有页面提炼） | 列出找到的规范文件与冲突处交用户定夺，⛔ 擅自合并、改写或删除这些文档 |
 | UI/UX 验收 | 走 `审`：[评审规则](references/review-rubric.md)＋[只读取证](references/task-review.md)，交证据与建议后停止，⛔ 生成新解、⛔ 进修正循环 |
 
 ### 平台纵深
@@ -138,6 +141,8 @@ metadata:
 - 100% 与 200% 缩放下看关键区域。
 - **六态六查**（交付前必过，缺项写进交付说明，⛔ 静默跳过）：空态／加载态／错误态，键盘可达／焦点可见／对比达标。前三项缺一＝功能不全；后三项缺一＝可用性不全。只展示、确实无某状态的页面写明「无空/加载/错误态」；对比度按**实际渲染色值**算，⛔ 按令牌名义值。
 - **决定台账**（治跨会话漂移）：开工读 `.vudgio/design-log.md`（运行期创建，首次按需建，仓库无此文件——引用闸当死路径报是预期误报），收尾追加。只追加、按日期记四样：定了什么解、用户原话、为什么选它、被什么推翻（旧条标 `superseded`，不删）。台账属过程记录留 `.vudgio/`，⛔ 进正式位置、⛔ 参与交付。
+
+- **兜底主题回滚约定**：启用 `assets/themes/friendship-bldg.css` 前，把当前页面的 `:root` 色板与设计说明原文存进 `.vudgio/<任务>/theme-before.md`（快照），台账追加一条（日期／为什么启用／快照路径，旧解标 `superseded`）。回滚时删掉页面对该 CSS 的引用、恢复快照色板，台账再追加一条标「已回滚」，旧兜底条标 `superseded`。⛔ 不覆盖快照、不删台账行。
 - 交付说明简明写到：选定解与理由；改了什么、哪些没做及原因；做了哪些动效；是否独立评审及问题处理；证据文件位置。
 - **接下来可以做**（收尾菜单）：交付末尾列 1–3 条可选下一步，第一条标「推荐」，末尾「回复编号就行，也可以直接说想改哪里」；小改动、停在确认点、用户已说下一步、无人值守时不列。正本 [轻路径](references/light-path.md) §接下来可以做。
 - **项目已有设计约定时挑明冲突**：项目根有 `DESIGN.md` 同类文件，照它执行；与本件判据冲突的照项目并在交付说明单列（哪条、原文、为何冲突），⛔ 擅自按本件改项目。
@@ -158,7 +163,7 @@ metadata:
 | 单卷字节 | 60KB | 拆分或定点读，不让 agent 通读 |
 | 一次加载 | 1-2 卷 | 按命令首读＋按问题顺带，不通读 |
 
-新增判据前先问：能落进已有卷吗？能就不新开卷。体量告警不算失败，但每次改动后跑一次体量检查（库级 `check_limits.py`，请在你的环境里定位）。
+新增判据前先问：能落进已有卷吗？能就不新开卷。体量告警不算失败，但每次改动后跑一次体量检查（`太玉洞Tagnodon/scripts/check_limits.py`）。
 
 ## 判据账
 
@@ -167,7 +172,7 @@ metadata:
 | 判据 | 执行器 | 读数 |
 |---|---|---|
 | 对比度地板（正文 ≥4.5、次要 ≥3） | `scripts/check_contrast.py`／`tests/test_check_contrast.py` | 退出码 1＝不过 |
-| 形容词性理由必须翻译成可观察决定，翻译不出即删 | `references/design-direction-1.md` 两张翻译表（人读） | 理由里出现未翻译的模糊词即退回 |
+| 色板成对判据（色阶累计漂移 ≤30°、同侧色相不许停级、角色色 ΔL* ≥10、不落 15–40° 暧昧带；功能色可登记 waivers 换轴，须写明两轴依据） | `scripts/audit_palette.py`／`tests/test_audit_palette.py` | 退出码 1＝不过；登记不合格或失效的豁免计提醒 |
 | 令牌三级解析与生成 | `scripts/emit_tokens.py`／`tests/test_emit_tokens.py` | JSON 基色与派生档齐 |
 | 弹簧值域 4–60 与 3s 截断告警 | `scripts/spring_to_linear.py`／`tests/test_spring_to_linear.py` | 3／61 必 rc=2，4／60 必 rc=0 |
 | 裁切审计 | `scripts/clip_audit.js`／`tests/test_clip_audit.py` | `cut === 0` 且无完全隐藏 |

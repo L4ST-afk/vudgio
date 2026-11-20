@@ -38,8 +38,8 @@
 
 | 方法源 | 取用了什么 | 落在本 skill 哪里 | 边界 |
 |---|---|---|---|
-| **禅院塔 Zojuta**（本机库内技能，外发不随包） | 断言账、测量纪律、检查器工程（§2.272 判据要能被执行、§2.31 删除集对账、§2.55 断言钉不变式） | 第 2 步「定达成判据」的可机判形态；每条判据配执行器与读数；判据账 14 件测试 | 只取通用工作法，不取塔内具体条目号与实测数字 |
-| **教院塔 Quojuta**（`<skills-root>/教院塔Quojuta`） | 三态结论（过／不过／证据不足）、达成判据前置、证据账 | 第 5 步「判据验收」的三态结论；「缺画面缺材料一律证据不足」 | 不取课型与教学法 |
+| **禅院塔 Zojuta**（`<skills 根>/禅院塔Zojuta`） | 断言账、测量纪律、检查器工程（§2.272 判据要能被执行、§2.31 删除集对账、§2.55 断言钉不变式） | 第 2 步「定达成判据」的可机判形态；每条判据配执行器与读数；判据账 14 件测试 | 只取通用工作法，不取塔内具体条目号与实测数字 |
+| **教院塔 Quojuta**（`<skills 根>/教院塔Quojuta`） | 三态结论（过／不过／证据不足）、达成判据前置、证据账 | 第 5 步「判据验收」的三态结论；「缺画面缺材料一律证据不足」 | 不取课型与教学法 |
 
 「先定可判约束、再让实现朝它靠」这一取向，是上面两条合流后的本地推演；判据正文 2026-11-18／11-20 两轮整库重写，按行比对无任何外部来源的共有散文。本地来源逐条登记在上表与下方各节，⛔ 引用任何新来源须单成立条并写清许可与署名。
 
@@ -47,15 +47,15 @@
 
 ## 2026-11-14 新增判据来源
 
-> 路径一栏写的是**归属**，不是可访问地址：`<skills-root>` 指技能库根目录占位符，随宿主不同；开源分发时不带任何绝对路径。
+> 路径一栏写的是**归属**，不是可访问地址：`<skills 根>` 指本机技能库根目录，随宿主不同；开源分发时不带任何绝对路径。
 
 | 来源 | 路径 | 取用 | 许可/处理 |
 |---|---|---|---|
-| Refactoring UI（约束与诊断层） | `<skills-root>/refactoring-ui` | Step 0 五样、三级解析、Twelve Laws 精选、Workflow B 顺序、Workflow D 表格与 sweep order、色阶/对比度算法 | 库内技能；只移植算法并标注出处 |
-| impeccable（架构） | `<skills-root>/impeccable` | 四型、命令面、craft-floor、Subtract before add、PRODUCT/DESIGN 双产物 | 库内技能（Apache 2.0）；不搬 launcher / detector hook / live |
-| apple-design（手感） | `<agents-skills-root>/apple-design` | 可中断、速度交接、动量投影、1:1、橡皮筋、空间一致性、方向暗示 | 库内技能；去 iOS 专属材质与 haptics |
+| Refactoring UI（约束与诊断层） | `<skills 根>/refactoring-ui` | Step 0 五样、三级解析、Twelve Laws 精选、Workflow B 顺序、Workflow D 表格与 sweep order、色阶/对比度算法 | 库内技能；只移植算法并标注出处 |
+| impeccable（架构） | `<skills 根>/impeccable` | 四型、命令面、craft-floor、Subtract before add、PRODUCT/DESIGN 双产物 | 库内技能（Apache 2.0）；不搬 launcher / detector hook / live |
+| apple-design（手感） | `<agents skills 根>/apple-design` | 可中断、速度交接、动量投影、1:1、橡皮筋、空间一致性、方向暗示 | 库内技能；去 iOS 专属材质与 haptics |
 | emil-design-eng（动效） | `https://github.com/emilkowalski/skills` | 动画四问、三条缓动、时长表、组件手感、性能红线、Before/After/Why | MIT，Copyright 2026 Emil Kowalski；改写并署名 |
-| design-taste-frontend（反 AI 腔） | `<skills-root>/design-taste-frontend` | 拒做清单、em-dash 判据（仅英文界面） | 库内技能；本卷只收判据 + 指针 |
+| design-taste-frontend（反 AI 腔） | `<skills 根>/design-taste-frontend` | 拒做清单、em-dash 判据（仅英文界面） | 库内技能；本卷只收判据 + 指针 |
 
 ---
 
@@ -63,7 +63,7 @@
 
 | 来源 | 路径 | 取用 | 边界 |
 |---|---|---|---|
-| 教院塔 Quojuta | `<skills-root>/教院塔Quojuta` | 三态结论（过／不过／证据不足）、达成判据前置、证据账 | 不取课型与教学法 |
-| 禅院塔 Zojuta | 本机库内技能，外发不随包 | 断言账、测量纪律、检查器工程、排版属性行为验证 | 派发档位已在 九山书会Sodalitas，不复制 |
+| 教院塔 Quojuta | `<skills 根>/教院塔Quojuta` | 三态结论（过／不过／证据不足）、达成判据前置、证据账 | 不取课型与教学法 |
+| 禅院塔 Zojuta | `<skills 根>/禅院塔Zojuta` | 断言账、测量纪律、检查器工程、排版属性行为验证 | 派发档位已在 九山书会Sodalitas，不复制 |
 | 华盖心经 | `Ob/Natan/华盖心经/`（私有档，不在 skills 根，不随包） | 四段式中的「诚实缺口」与可证伪性 | 27 条是教学/人际/管理知识，只借格式，不借内容 |
-| web-design-engineer | `<skills-root>/web-design-engineer` | 单文件 HTML/JSX 结构、内联资源、零构建边界 | 只抽一卷，原技能保留 |
+| web-design-engineer | `<skills 根>/web-design-engineer` | 单文件 HTML/JSX 结构、内联资源、零构建边界 | 只抽一卷，原技能保留 |

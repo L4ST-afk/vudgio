@@ -4,13 +4,6 @@
 
 ## 目录
 
-1. 一、色彩变量体系 (Color System)
-2. 二、0.5px 精细微边框规范 (0.5px Micro-Borders)
-3. 三、光学对齐与同心圆角 (Optical Alignment & Concentric Radius)
-4. 四、阴影、层级与防裁切余量规范 (Shadows & Overflow Clearance)
-
-## 目录
-
 - [一、色彩变量体系 (Color System)](#一色彩变量体系-color-system)
 - [二、0.5px 精细微边框规范 (0.5px Micro-Borders)](#二05px-精细微边框规范-05px-micro-borders)
 - [三、光学对齐与同心圆角 (Optical Alignment & Concentric Radius)](#三光学对齐与同心圆角-optical-alignment-concentric-radius)

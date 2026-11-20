@@ -1,0 +1,459 @@
+/* 浮龟 Vudgio · 辨识度兜底主题（⚠️ 非默认风格）
+   仅当 craft-floor「辨识度兜底」5 步求解后仍不足、且用户明确同意时启用。
+   启用前须按 workdir 记 .vudgio/<任务>/theme-before.md 快照 + design-log.md 台账；回滚见同卷。
+   来源：来雪亭 7 件自建皮肤之一 friendship-bldg.css（本库独立维护副本，与上游 36 件 MIT 主题无关）。
+   材质：乳黄水刷石 / 汉白玉 / 彩色水磨石 / 鎏金 / 白桦木饰面 + 苏式彩绘记号。
+   改造：从 deck 主题删去 .deck/.slide/.quiz-opt/.cp-* 等 deck/demo 专属规则，保留 :root 色板与通用组件/材质类。
+*/
+/* theme: friendship-bldg - 友好大厦 Friendship Bldg ｜ 乳黄石墙 · 汉白玉 · 彩色水磨石 · 鎏金
+   2026-11-20 由 russian-matryoshka.css 重建并改名。
+   命名：上海展览中心（延安中路 1000 号），原名「中苏友好大厦」，1954-05 开工 / 1955-03 竣工，
+        俄罗斯古典主义 + 巴洛克细部，中轴对称，110.4 m 鎏金钢塔，塔顶红玻璃五角星。
+   骨架：整段沿用 century-sq.css 的 token 名、组件选择器、六档字号与 CJK 行盒补偿，
+        只把「模度混凝土 + 磨砂玻璃」换成「石墙 + 汉白玉 + 水磨石 + 鎏金」。
+   材质取自实景：
+     石墙 乳黄 #EFE3C6·#D6BE93，墙面为水刷石（细颗粒 + 石缝）而非光滑石材；
+     汉白玉 台基 / 浮雕 #FBF6EC；水磨石 地坪 浅绿 #D9E1D2 底 + 砖红 / 墨绿 / 米白 石子；
+     鎏金 塔身与花饰 #B08A2B·#DDBE5B；薄荷绿 序馆穹顶 #CFE7D6（金色花束纹样）；
+     红玻璃 五角星 #9C2226 —— 只做小面积标记（accent-2），不铺底。
+     （2026-11-20 配色体检后微调：鎏金 → #9F7C27（对底 2.65→3.20:1）、红玻璃 → #881E21
+       （与薄荷绿 ΔL* 7.9→12.5）。组件里 rgba(176,138,43,…) 那批是低透明度鎏金反光与
+       水磨石碎屑，属装饰不随 token 走，留旧值；⛔ 别按 token 反推它们对不上。）
+   铁则：单视图最多「鎏金 + 一个次色」；石缝 / 水磨石石子只做低对比暗示；
+        中轴对称、直角为主、漫射顶光；⛔ 无粗黑框 / 硬投影 / 强折射玻璃。
+   字体：标题走宋（石碑刻字的纪念碑性，weight 400 —— 思源宋体粗度不足时不伪粗）；
+        按钮 / 标签走内化智造黑，其 usWeightClass=400（单字重静态 ttf，禁用 700 合成粗体）；
+        正文思源宋体；不引入网络字体。 */
+:root{
+  --bg:#f2e8d2;
+  --bg-soft:#efe4cb;
+  --surface:#fbf6ec;
+  --surface-2:#ece0c8;
+  /* 石墙 / 汉白玉 / 水磨石 */
+  --stone:#efe3c6;
+  --stone-deep:#d6be93;
+  --marble:#fbf6ec;
+  --terrazzo:#d9e1d2;
+  --terrazzo-deep:#b9c6b4;
+  /* 鎏金 / 红玻璃 / 薄荷绿 */
+  --gold:#9f7c27;             /* 鎏金压深一档（L*54）：原 #b08a2b 对底 #f2e8d2 只有 2.65:1 */
+  --gold-hi:#ddbe5b;
+  --gold-lo:#8a6a18;
+  --red:#881e21;               /* 红玻璃（L*30.1）：与薄荷绿 ΔL* 从 7.9 拉到 12.5 */
+  --mint:#cfe7d6;
+  --jade:#3e6e58;
+  --border:rgba(90,74,48,.20);
+  --border-strong:rgba(90,74,48,.34);
+  --text-1:#26221b;
+  --text-2:#574c3c;
+  --text-3:#6a5d48;            /* 乳黄底上 5.0–5.3:1 */
+  --accent:#9f7c27;            /* accent 填充上的字必须 --accent-ink；压底 3.20:1 */
+  --accent-2:#881e21;
+  --accent-3:#3e6e58;
+  --accent-ink:#1e1709;        /* 鎏金压深后 #1e1709 on #9f7c27 ≈ 4.56:1（原 5.3 是压深前的数） */
+  --good:#3e6e58;
+  --warn:#8a5a12;
+  --bad:#881e21;
+  --grad:linear-gradient(135deg,#8a6a18,#ddbe5b);
+  --grad-soft:linear-gradient(135deg,#f7efdd,#efe4cb);
+  /* 石面颗粒：内联 SVG 噪声（feTurbulence），比重复 radial 的格点更接近水刷石骨料 */
+  --fb-grain:url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.42 0 0 0 0 0.33 0 0 0 0 0.19 0 0 0 0.26 0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23f)'/%3E%3C/svg%3E");
+  /* 彩色水磨石铺贴片（128px 无缝平铺，碎石为多边形，不是圆点阵） */
+  --fb-terrazzo-tile:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='128' height='128' viewBox='0 0 128 128'><polygon points='-16.1,-16.9 -14.1,-16.3 -13.5,-14.4 -15.1,-13.1 -17.0,-13.5 -17.2,-15.0' fill='%23B9C6B4' fill-opacity='0.52'/><polygon points='-0.1,-14.2 1.8,-13.8 2.4,-12.5 2.1,-11.1 0.4,-10.2 -1.0,-11.3 -0.9,-13.0' fill='%23B9C6B4' fill-opacity='0.52'/><polygon points='7.6,-14.6 9.5,-17.3 12.5,-16.3 12.5,-12.3 9.1,-12.0' fill='%23B08A2B' fill-opacity='0.22'/><polygon points='30.0,-21.9 31.6,-21.4 32.2,-18.5 30.8,-17.4 28.5,-18.2 28.0,-20.2' fill='%23FBF6EC' fill-opacity='0.82'/><polygon points='42.8,-15.4 42.5,-12.9 40.1,-11.9 37.8,-13.1 38.3,-16.4 40.3,-17.1' fill='%23EFE3C6' fill-opacity='0.7'/><polygon points='59.7,-11.4 61.6,-14.2 63.9,-14.1 65.5,-11.7 64.7,-9.1 61.1,-8.9' fill='%23EFE3C6' fill-opacity='0.7'/><polygon points='70.9,-14.7 73.5,-15.3 74.7,-13.8 73.8,-10.9 71.4,-10.5 69.6,-12.0' fill='%23EFE3C6' fill-opacity='0.7'/><polygon points='90.5,-17.5 89.0,-16.9 86.8,-18.2 86.6,-19.9 88.2,-21.5 90.5,-21.4 91.5,-19.7' fill='%23B08A2B' fill-opacity='0.22'/><polygon points='102.4,-21.0 104.4,-17.8 102.0,-15.7 98.8,-17.3 99.5,-20.5' fill='%233E6E58' fill-opacity='0.28'/><polygon points='114.3,-14.0 115.5,-15.6 117.2,-14.6 117.0,-12.9 115.2,-12.7' fill='%233E6E58' fill-opacity='0.28'/><polygon points='132.1,-20.8 134.5,-19.4 134.2,-16.8 131.9,-16.8 130.5,-19.4' fill='%23FBF6EC' fill-opacity='0.62'/><polygon points='-10.8,5.0 -12.4,6.3 -14.7,6.0 -15.2,3.6 -14.0,2.4 -11.0,2.5' fill='%23D6BE93' fill-opacity='0.46'/><polygon points='-5.3,-0.7 -3.1,-0.2 -1.8,1.6 -3.1,3.4 -4.8,3.8 -6.7,3.0 -6.6,0.9' fill='%23FBF6EC' fill-opacity='0.82'/><polygon points='15.1,1.8 16.7,1.3 18.1,3.1 17.7,5.3 15.7,5.3 14.3,3.7' fill='%23B08A2B' fill-opacity='0.22'/><polygon points='31.1,-0.1 33.7,0.4 34.5,3.2 33.0,5.2 30.3,5.7 29.4,2.9' fill='%23EFE3C6' fill-opacity='0.7'/><polygon points='41.7,-0.1 41.7,-1.5 42.9,-2.4 44.3,-1.6 44.3,0.0 43.5,0.8' fill='%23FBF6EC' fill-opacity='0.82'/><polygon points='62.8,-5.1 62.5,-2.5 60.4,-2.3 59.4,-3.7 60.5,-5.5' fill='%23FBF6EC' fill-opacity='0.82'/><polygon points='73.4,3.0 73.3,1.4 74.6,0.3 76.1,1.0 76.7,2.8 75.4,3.9' fill='%23D6BE93' fill-opacity='0.46'/><polygon points='95.2,-6.9 96.7,-5.1 96.3,-2.1 93.5,-2.3 91.8,-3.6 92.5,-6.3' fill='%23FBF6EC' fill-opacity='0.62'/><polygon points='99.3,2.0 99.4,-0.1 102.1,-2.1 104.5,-0.3 103.8,2.2 101.2,4.2' fill='%23FBF6EC' fill-opacity='0.62'/><polygon points='122.0,1.3 122.6,3.1 120.2,4.4 119.2,3.0 120.1,1.0' fill='%23FBF6EC' fill-opacity='0.82'/><polygon points='135.0,-2.2 137.5,-2.0 137.9,0.7 136.9,2.3 134.5,1.3 133.7,-0.1' fill='%233E6E58' fill-opacity='0.28'/><polygon points='-15.2,21.4 -16.5,19.2 -15.9,17.7 -13.8,16.7 -11.9,17.7 -11.6,20.3 -13.6,21.3' fill='%23FBF6EC' fill-opacity='0.62'/><polygon points='5.6,13.9 4.7,15.1 3.1,15.8 1.7,13.8 2.6,12.5 4.5,12.1' fill='%23D6BE93' fill-opacity='0.46'/><polygon points='16.9,16.1 15.6,15.1 15.6,13.9 17.2,12.9 18.4,13.7 18.2,15.6' fill='%23FBF6EC' fill-opacity='0.62'/><polygon points='26.3,14.3 26.2,11.9 28.0,10.7 30.1,12.2 29.3,14.4' fill='%233E6E58' fill-opacity='0.28'/><polygon points='44.1,13.2 44.1,15.0 41.7,16.0 40.0,15.3 39.7,12.6 41.5,11.4 43.4,11.6' fill='%23FBF6EC' fill-opacity='0.82'/><polygon points='56.5,18.0 58.0,16.9 59.6,17.7 59.6,19.3 58.2,20.5 56.7,19.4' fill='%23EFE3C6' fill-opacity='0.7'/><polygon points='75.5,18.9 77.8,16.9 80.1,18.1 80.4,20.9 78.5,22.3 76.2,21.0' fill='%233E6E58' fill-opacity='0.28'/><polygon points='87.3,14.5 88.1,12.6 89.7,11.8 90.7,12.7 91.6,14.3 90.3,16.0 88.3,15.8' fill='%23FBF6EC' fill-opacity='0.62'/><polygon points='104.5,19.0 106.3,17.2 108.4,17.8 108.0,20.7 105.6,20.8' fill='%23D6BE93' fill-opacity='0.46'/><polygon points='116.1,17.0 114.6,14.6 115.9,12.0 118.3,12.1 120.4,14.1 119.3,16.5' fill='%23EFE3C6' fill-opacity='0.7'/><polygon points='137.8,17.3 135.8,17.9 133.5,16.6 134.3,13.7 136.9,13.8 138.4,14.7' fill='%23D9E1D2' fill-opacity='0.6'/><polygon points='-14.6,33.4 -17.4,31.2 -16.1,29.4 -13.8,28.5 -11.4,30.6 -12.5,33.2' fill='%23D6BE93' fill-opacity='0.46'/><polygon points='0.1,28.8 -2.2,29.0 -3.6,26.4 -2.3,23.5 0.1,23.1 1.8,26.3' fill='%23FBF6EC' fill-opacity='0.82'/><polygon points='15.8,29.6 14.3,28.5 13.5,26.2 14.7,25.4 16.2,24.9 17.6,26.5 17.8,28.4' fill='%239C2226' fill-opacity='0.26'/><polygon points='29.8,30.6 30.3,28.9 31.4,28.1 33.4,28.5 33.8,30.9 32.4,32.1 30.6,32.2' fill='%23B9C6B4' fill-opacity='0.52'/><polygon points='44.3,28.5 44.5,26.3 46.1,25.5 47.7,27.0 46.0,29.1' fill='%23FBF6EC' fill-opacity='0.82'/><polygon points='55.2,29.9 56.8,28.3 59.1,29.1 60.3,31.4 58.6,33.3 56.0,32.7' fill='%23EFE3C6' fill-opacity='0.7'/><polygon points='70.4,25.2 71.4,24.1 73.0,24.5 73.0,26.4 71.0,26.9' fill='%23FBF6EC' fill-opacity='0.82'/><polygon points='88.9,32.7 90.3,31.7 91.6,32.5 91.4,34.3 89.9,35.0 88.8,34.1' fill='%23FBF6EC' fill-opacity='0.62'/><polygon points='104.2,30.0 103.7,28.4 104.5,27.0 106.0,27.1 106.7,28.3 106.5,29.6 105.8,30.6' fill='%23FBF6EC' fill-opacity='0.62'/><polygon points='122.4,32.4 124.0,33.5 123.7,35.1 122.4,35.8 120.4,35.0 120.9,33.2' fill='%233E6E58' fill-opacity='0.28'/><polygon points='137.0,24.5 138.6,22.6 141.5,23.9 141.8,26.1 140.0,28.0 137.5,27.7' fill='%233E6E58' fill-opacity='0.28'/><polygon points='-19.2,44.6 -19.3,42.8 -18.3,42.0 -16.6,42.9 -16.9,44.6' fill='%23FBF6EC' fill-opacity='0.62'/><polygon points='2.7,44.5 4.7,43.4 6.5,45.0 6.9,47.3 3.8,48.2 2.2,46.9' fill='%23FBF6EC' fill-opacity='0.82'/><polygon points='11.4,47.0 12.7,46.5 13.9,47.8 13.5,49.0 11.3,48.8' fill='%23FBF6EC' fill-opacity='0.82'/><polygon points='29.5,40.7 30.1,43.8 27.7,45.3 25.1,42.8 26.4,39.8' fill='%23B9C6B4' fill-opacity='0.52'/><polygon points='42.5,51.8 39.9,50.7 40.3,48.5 42.9,47.9 44.0,50.1' fill='%23B08A2B' fill-opacity='0.22'/><polygon points='58.0,47.6 55.9,46.7 55.3,45.2 56.3,42.8 58.4,42.8 60.0,44.3 59.9,46.3' fill='%23FBF6EC' fill-opacity='0.82'/><polygon points='75.5,44.3 74.1,45.2 72.9,44.0 72.7,42.4 73.8,41.6 75.1,41.9 76.1,43.0' fill='%233E6E58' fill-opacity='0.28'/><polygon points='88.7,43.9 90.7,42.9 91.8,43.5 92.6,45.4 92.0,46.5 90.2,47.2 88.6,45.6' fill='%23EFE3C6' fill-opacity='0.7'/><polygon points='99.9,49.1 100.5,46.8 102.7,46.6 103.6,48.7 101.7,50.1' fill='%233E6E58' fill-opacity='0.28'/><polygon points='127.3,41.4 126.3,43.4 123.9,44.3 122.6,42.0 123.4,38.5 125.7,38.3' fill='%23FBF6EC' fill-opacity='0.82'/><polygon points='128.9,40.7 129.4,39.3 130.6,38.4 131.8,39.5 132.0,40.7 130.5,41.4' fill='%23FBF6EC' fill-opacity='0.82'/><polygon points='-10.3,61.1 -9.4,62.5 -10.5,64.1 -12.1,63.8 -12.0,61.8' fill='%23D9E1D2' fill-opacity='0.6'/><polygon points='3.6,62.5 1.0,62.1 0.7,58.6 3.4,56.8 6.0,58.7 5.8,60.7' fill='%23D6BE93' fill-opacity='0.46'/><polygon points='16.7,63.7 14.8,60.7 16.6,58.9 19.0,58.8 20.8,61.4 19.1,63.9' fill='%239C2226' fill-opacity='0.26'/><polygon points='30.9,55.7 29.9,58.6 28.0,58.5 26.6,56.9 27.0,55.1 29.3,54.1' fill='%23D9E1D2' fill-opacity='0.6'/><polygon points='50.0,58.4 48.0,59.4 46.1,58.9 46.1,56.9 47.3,55.6 49.2,56.6' fill='%23FBF6EC' fill-opacity='0.82'/><polygon points='60.8,54.2 62.8,53.8 64.6,54.9 64.5,57.2 62.5,58.5 60.9,56.9' fill='%23EFE3C6' fill-opacity='0.7'/><polygon points='79.2,57.7 75.9,58.6 73.9,56.5 74.7,53.8 77.2,52.8 79.8,54.6' fill='%23FBF6EC' fill-opacity='0.82'/><polygon points='88.1,61.6 90.4,61.6 91.2,63.5 90.4,65.6 88.4,65.7 86.6,63.8' fill='%23B08A2B' fill-opacity='0.22'/><polygon points='101.1,58.2 102.1,56.5 104.4,56.6 105.5,58.0 104.6,60.1 102.4,59.9' fill='%239C2226' fill-opacity='0.26'/><polygon points='125.8,62.3 124.3,63.1 122.4,61.8 122.9,59.9 124.6,59.0 125.8,60.3' fill='%23D9E1D2' fill-opacity='0.6'/><polygon points='132.0,61.9 133.5,60.7 135.5,61.2 136.6,63.1 134.7,64.5 132.7,63.6' fill='%23FBF6EC' fill-opacity='0.62'/><polygon points='-10.0,74.1 -13.5,74.9 -14.5,72.8 -13.4,70.2 -10.5,71.0' fill='%23FBF6EC' fill-opacity='0.62'/><polygon points='3.1,73.9 4.9,73.1 6.6,73.9 7.2,76.0 5.7,77.6 3.0,77.3 2.0,75.8' fill='%23B9C6B4' fill-opacity='0.52'/><polygon points='19.9,70.9 17.9,72.7 16.1,71.5 15.4,68.4 17.5,67.8 19.7,68.1' fill='%23D9E1D2' fill-opacity='0.6'/><polygon points='29.2,70.4 31.0,70.5 32.7,71.4 32.3,73.9 30.1,74.9 28.4,74.4 27.9,72.1' fill='%23B9C6B4' fill-opacity='0.52'/><polygon points='45.2,71.0 45.9,69.8 47.2,69.7 48.3,71.1 47.7,72.3 46.0,72.6' fill='%23D6BE93' fill-opacity='0.46'/><polygon points='60.2,70.1 62.6,70.5 63.7,72.8 61.2,74.5 59.1,72.3' fill='%23B08A2B' fill-opacity='0.22'/><polygon points='72.2,74.3 70.6,74.6 69.0,73.6 69.2,71.8 71.2,71.1 72.8,72.3' fill='%239C2226' fill-opacity='0.26'/><polygon points='87.9,78.9 88.5,76.2 90.7,75.9 92.4,77.7 91.6,79.6 89.8,80.3' fill='%23FBF6EC' fill-opacity='0.82'/><polygon points='105.6,75.9 107.2,75.2 108.3,76.1 108.3,78.0 107.0,79.0 105.8,78.3 104.9,77.2' fill='%23FBF6EC' fill-opacity='0.82'/><polygon points='121.7,74.4 123.9,73.8 125.3,76.4 124.0,78.4 121.8,77.7 120.6,75.6' fill='%23B08A2B' fill-opacity='0.22'/><polygon points='127.4,78.3 128.9,75.9 131.1,76.2 131.7,78.9 129.6,80.0' fill='%239C2226' fill-opacity='0.26'/><polygon points='-17.6,84.3 -16.1,87.1 -17.8,89.3 -20.6,87.9 -19.7,84.8' fill='%23EFE3C6' fill-opacity='0.7'/><polygon points='-2.4,86.9 0.4,86.6 2.8,87.3 3.0,89.8 0.9,91.2 -0.9,91.4 -2.3,89.5' fill='%23FBF6EC' fill-opacity='0.62'/><polygon points='16.7,94.6 14.7,96.8 12.6,96.5 11.6,93.7 13.5,91.7 15.4,92.1' fill='%23D6BE93' fill-opacity='0.46'/><polygon points='25.5,85.5 27.2,84.7 29.5,84.9 29.7,87.5 28.3,88.7 26.4,88.2' fill='%239C2226' fill-opacity='0.26'/><polygon points='39.7,95.8 38.8,94.1 39.5,92.6 41.1,92.2 42.9,93.3 42.6,95.0 41.6,96.2' fill='%23B9C6B4' fill-opacity='0.52'/><polygon points='61.3,90.4 63.5,88.1 65.1,89.2 66.4,92.0 64.8,93.5 61.7,92.8' fill='%23B08A2B' fill-opacity='0.22'/><polygon points='78.9,95.9 76.2,95.1 76.0,92.6 77.5,90.8 80.4,91.5 81.1,94.4' fill='%23D9E1D2' fill-opacity='0.6'/><polygon points='91.0,89.8 92.4,89.1 94.5,90.0 94.4,91.8 92.7,93.0 91.4,93.0 90.5,91.2' fill='%23FBF6EC' fill-opacity='0.62'/><polygon points='104.7,89.1 104.9,86.4 107.9,86.3 110.0,88.2 109.0,90.5 105.9,91.4' fill='%23FBF6EC' fill-opacity='0.82'/><polygon points='123.2,86.2 121.4,87.6 120.0,86.3 120.7,84.2 122.8,84.7' fill='%23B9C6B4' fill-opacity='0.52'/><polygon points='138.1,95.2 135.6,94.1 135.4,91.1 137.5,89.4 139.8,91.1 139.9,93.1' fill='%233E6E58' fill-opacity='0.28'/><polygon points='-17.4,104.0 -15.5,102.7 -13.8,103.7 -14.2,106.1 -16.6,105.9' fill='%23FBF6EC' fill-opacity='0.82'/><polygon points='3.0,108.3 1.8,107.3 1.9,105.9 3.6,105.4 4.7,105.9 4.9,107.7' fill='%23D9E1D2' fill-opacity='0.6'/><polygon points='16.6,110.1 16.4,108.5 17.4,106.8 19.1,107.5 19.8,109.5 18.2,110.6' fill='%23EFE3C6' fill-opacity='0.7'/><polygon points='28.2,106.7 30.4,106.6 31.4,108.4 30.4,110.5 28.3,110.2 27.7,108.0' fill='%23EFE3C6' fill-opacity='0.7'/><polygon points='38.0,102.5 38.9,100.1 40.9,100.4 42.6,102.0 41.2,104.1 38.7,104.3' fill='%239C2226' fill-opacity='0.26'/><polygon points='59.5,105.3 60.9,104.7 61.9,105.6 61.2,107.4 59.7,107.1' fill='%23FBF6EC' fill-opacity='0.62'/><polygon points='75.8,102.7 74.3,100.7 75.3,98.8 77.8,99.0 79.2,100.3 78.1,102.7' fill='%23D6BE93' fill-opacity='0.46'/><polygon points='87.2,104.9 88.1,107.1 86.8,109.3 84.5,110.1 83.4,108.8 82.6,106.5 83.8,104.3' fill='%23D6BE93' fill-opacity='0.46'/><polygon points='106.8,98.7 108.5,99.8 107.9,102.8 106.5,103.5 104.2,102.0 104.0,100.2' fill='%23FBF6EC' fill-opacity='0.62'/><polygon points='119.2,103.1 117.4,100.5 120.2,98.3 122.5,99.9 122.9,102.7' fill='%23FBF6EC' fill-opacity='0.62'/><polygon points='138.7,102.5 136.9,103.4 135.6,101.6 135.2,100.3 136.4,99.0 138.9,99.0 139.6,100.6' fill='%23EFE3C6' fill-opacity='0.7'/><polygon points='-12.6,119.4 -11.2,122.5 -13.3,124.5 -16.3,122.8 -15.3,119.8' fill='%23D9E1D2' fill-opacity='0.6'/><polygon points='1.7,119.8 3.5,120.2 4.5,121.9 3.7,123.4 1.3,123.3 0.4,121.5' fill='%23FBF6EC' fill-opacity='0.62'/><polygon points='10.3,120.0 8.6,119.6 8.1,117.2 10.1,115.3 11.9,116.0 12.4,118.2' fill='%23EFE3C6' fill-opacity='0.7'/><polygon points='30.2,120.8 32.6,119.0 34.6,120.1 33.8,122.9 31.4,123.2' fill='%23B9C6B4' fill-opacity='0.52'/><polygon points='40.6,124.8 41.3,123.2 42.4,122.0 44.3,122.6 45.5,124.0 44.6,125.8 42.6,125.9' fill='%23D6BE93' fill-opacity='0.46'/><polygon points='57.3,120.6 59.6,121.9 59.2,124.7 56.3,124.4 55.7,122.3' fill='%23FBF6EC' fill-opacity='0.62'/><polygon points='72.7,114.0 75.7,112.9 77.3,114.7 77.3,117.9 75.6,118.5 73.0,117.1' fill='%23FBF6EC' fill-opacity='0.82'/><polygon points='94.8,118.7 94.3,120.4 92.1,121.7 90.0,120.3 90.4,118.3 92.8,117.2' fill='%23D9E1D2' fill-opacity='0.6'/><polygon points='101.0,115.6 102.9,114.0 105.0,115.0 104.9,117.7 103.5,119.3 100.8,118.2' fill='%23EFE3C6' fill-opacity='0.7'/><polygon points='115.2,115.3 117.7,116.1 119.1,117.8 117.3,120.3 114.9,120.5 113.1,117.6' fill='%23FBF6EC' fill-opacity='0.62'/><polygon points='135.3,119.0 135.3,121.4 133.0,122.1 130.6,121.4 130.3,119.6 131.4,118.1 133.5,117.7' fill='%239C2226' fill-opacity='0.26'/><polygon points='-13.5,132.7 -15.3,134.4 -18.3,134.3 -18.9,132.0 -17.2,129.8 -14.6,130.2' fill='%23EFE3C6' fill-opacity='0.7'/><polygon points='1.2,136.2 1.3,137.8 0.5,139.2 -1.2,138.6 -2.2,137.1 -1.2,136.1 -0.2,135.7' fill='%23FBF6EC' fill-opacity='0.82'/><polygon points='18.8,135.1 20.4,137.6 18.3,139.8 15.6,138.2 15.1,135.6' fill='%23FBF6EC' fill-opacity='0.62'/><polygon points='24.9,139.5 25.6,136.6 28.0,135.8 29.1,138.5 27.0,140.3' fill='%23D6BE93' fill-opacity='0.46'/><polygon points='40.1,136.4 41.7,137.8 41.4,139.9 38.6,140.0 37.8,137.9' fill='%23EFE3C6' fill-opacity='0.7'/><polygon points='62.7,136.5 64.9,139.2 62.3,141.4 59.7,140.7 60.2,137.2' fill='%23B08A2B' fill-opacity='0.22'/><polygon points='77.2,135.9 79.1,134.6 81.7,135.8 80.9,138.7 78.1,138.9' fill='%23B9C6B4' fill-opacity='0.52'/><polygon points='84.4,138.5 83.1,137.2 83.6,134.5 86.2,133.7 88.2,135.3 87.8,137.3 86.6,139.2' fill='%23D9E1D2' fill-opacity='0.6'/><polygon points='100.6,133.3 98.2,131.9 97.9,128.9 100.3,127.3 103.1,128.9 102.6,132.0' fill='%23FBF6EC' fill-opacity='0.82'/><polygon points='125.8,136.3 127.3,137.9 126.7,140.8 124.6,141.6 122.6,139.5 123.1,136.8' fill='%23FBF6EC' fill-opacity='0.62'/><polygon points='140.0,130.9 137.6,132.4 136.2,130.2 137.2,128.3 139.1,128.5' fill='%23D6BE93' fill-opacity='0.46'/></svg>");
+  /* 直角为主；只有小标签领圆角 */
+  --radius:3px;
+  --radius-sm:2px;
+  --radius-lg:8px;
+  --shadow:0 10px 24px rgba(80,62,30,.08),0 1px 3px rgba(80,62,30,.05);
+  --shadow-lg:0 20px 44px rgba(80,62,30,.12),0 3px 8px rgba(80,62,30,.06);
+  /* 字体：语义 token 定义在 assets/fonts.css，此处只映射并带兜底栈 */
+  /* 智造黑是纯中文字库，没有拉丁字形；按钮里的英文（Cancel / OK）会回退到宋体，
+     读作正文衬线，与「按钮走黑体」冲突。前面垫一个拉丁无衬线，中文仍落智造黑。 */
+  --font-button:'Inter','Helvetica Neue',Arial,var(--font-ui-zhizao,'SC Zhizao Hei','素材集市智造黑1.02','PingFang SC',sans-serif);
+  --font-display:var(--font-body-song,'Source Han Serif SC','思源宋体','STZhongsong','Songti SC',serif);
+  --font-sans:var(--font-body-song,'Source Han Serif SC','思源宋体','STZhongsong',serif);
+  --font-serif:var(--font-body-song,'Source Han Serif SC','思源宋体','STZhongsong',serif);
+  --font-note:var(--font-body-song,'Source Han Serif SC','思源宋体','STZhongsong',serif);
+  --font-mono:var(--font-ui-zhizao,'PingFang SC',sans-serif);   /* 编号走智造黑，不用等宽 */
+  --letter-tight:0;              /* 中文不套英文负字距 */
+  --letter-normal:.01em;
+}
+
+html,body{
+  background:#e9dfc6;
+  color:var(--text-1);
+  font-family:var(--font-sans);
+  font-weight:400;
+}
+
+/* 环境层：塔顶天光 → 乳黄石墙上段 → 底部一道水磨石地坪。
+   一律低对比、无石缝：石缝只出现在 .fb-stone 样本与卡片边线，横贯整页会读成扫描线。 */
+body{background:linear-gradient(180deg,#dce9ef 0%,#efe4cb 34%,#f2e8d2 72%,#eee2c7 100%)}
+
+/* 脚下地坪：只留 14px 的彩色水磨石剖带 + 一道金线门槛，不吞页脚 */
+
+
+h1.title,.h1{font-weight:400;line-height:1.18;letter-spacing:var(--letter-normal)}
+h2.title,.h2{font-weight:400;line-height:1.2;letter-spacing:var(--letter-normal)}
+h3,.h3,h4,.h4{font-weight:400}
+.lede{color:var(--text-2);font-weight:400;line-height:1.7}
+.kicker,.eyebrow{
+  font-family:var(--font-mono);
+  font-weight:400;
+  color:var(--text-3);
+  letter-spacing:.14em;
+}
+
+/* —— 石墙板：水刷石骨料（细颗粒 + 稀疏粗石）＋ 顶亮倒角，直角细边。
+   石缝不进卡片：横缝会穿过正文，读成扫描线。 —— */
+.card{
+  background-color:#f8f0dc;
+  background-image:
+    var(--fb-grain),
+    radial-gradient(120% 80% at 16% 0%,rgba(255,255,255,.55) 0%,rgba(255,255,255,0) 62%),
+    linear-gradient(180deg,rgba(255,255,255,.30),rgba(214,190,147,.10));
+  background-size:150px 150px,100% 100%,auto;
+  border:1px solid rgba(120,96,60,.26);
+  border-radius:var(--radius);
+  box-shadow:
+    inset 0 1px 0 rgba(176,138,43,.78),
+    inset 0 2px 0 rgba(255,255,255,.42),
+    0 1px 0 rgba(120,96,60,.06),
+    var(--shadow);
+}
+/* 描金副线：红玻璃顶线内侧的一像素金线（原「赭红＋描金双线」） */
+.card-accent::before{
+  content:"";position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,rgba(176,138,43,.92),rgba(221,190,91,.88) 42%,rgba(176,138,43,.78));
+}
+/* 套娃彩绘留下的记号：五瓣花点只占卡顶右侧的留白带，不压标题 */
+.card-accent::after{
+  content:"";position:absolute;top:11px;right:16px;
+  width:119px;height:9px;
+  background:
+    radial-gradient(circle 3.6px at 5px 50%,#9C2226 96%,transparent),
+    radial-gradient(circle 3.6px at 31px 50%,#B08A2B 96%,transparent),
+    radial-gradient(circle 3.6px at 59px 50%,#3E6E58 96%,transparent),
+    radial-gradient(circle 3.6px at 87px 50%,#B08A2B 96%,transparent),
+    radial-gradient(circle 3.6px at 113px 50%,#9C2226 96%,transparent);
+  opacity:.9;
+}
+/* 汉白玉台基：暖白 + 双层柔光斑 + 极淡金色斜脉，压字最稳的一档 */
+.card-soft{
+  background-color:var(--marble);
+  background-image:
+    radial-gradient(120% 90% at 26% 16%,rgba(255,255,255,.92) 0px,transparent 58%),
+    radial-gradient(100% 80% at 76% 74%,rgba(244,238,224,.70) 0px,transparent 56%),
+    linear-gradient(116deg,transparent 46%,rgba(176,138,43,.050) 49%,rgba(176,138,43,.028) 52%,transparent 58%);
+  background-size:100% 100%,100% 100%,440px 440px;
+  border:1px solid rgba(176,138,43,.34);
+  box-shadow:inset 0 1px 0 #ffffff,inset 0 -1px 0 rgba(176,138,43,.10),var(--shadow);
+}
+/* 鎏金描边：一像素真金线，去阴影；里面只留一层薄石底 */
+.card-outline{
+  background:rgba(242,232,210,.55);
+  border:1px solid rgba(176,138,43,.82);
+  border-radius:var(--radius-sm);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.70),0 1px 0 rgba(176,138,43,.10);
+}
+/* 红玻璃：只在卡片上沿点一道，绝不大面积铺色 */
+.card-accent{
+  position:relative;
+  border-top:3px solid var(--accent-2);
+  border-left:1px solid rgba(120,96,60,.26);
+  background-color:#fcf8ee;
+  background-image:
+    var(--fb-grain),
+    linear-gradient(180deg,rgba(255,255,255,.30),rgba(214,190,147,.10));
+  background-size:150px 150px,auto;
+  box-shadow:
+    inset 0 1px 0 rgba(176,138,43,.78),
+    inset 0 2px 0 rgba(255,255,255,.42),
+    0 1px 0 rgba(120,96,60,.06),
+    var(--shadow);
+}
+/* 描金副线：红玻璃顶线内侧的一像素金线（原「赭红＋描金双线」） */
+.card-accent::before{
+  content:"";position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,rgba(176,138,43,.92),rgba(221,190,91,.88) 42%,rgba(176,138,43,.78));
+}
+/* 套娃彩绘留下的记号：五瓣花点只占卡顶右侧的留白带，不压标题 */
+.card-accent::after{
+  content:"";position:absolute;top:11px;right:16px;
+  width:119px;height:9px;
+  background:
+    radial-gradient(circle 3.6px at 5px 50%,#9C2226 96%,transparent),
+    radial-gradient(circle 3.6px at 31px 50%,#B08A2B 96%,transparent),
+    radial-gradient(circle 3.6px at 59px 50%,#3E6E58 96%,transparent),
+    radial-gradient(circle 3.6px at 87px 50%,#B08A2B 96%,transparent),
+    radial-gradient(circle 3.6px at 113px 50%,#9C2226 96%,transparent);
+  opacity:.9;
+}
+.card-hover:hover{box-shadow:var(--shadow-lg);transform:translateY(-2px)}
+
+/* 展厅玻璃：暖白半透 + 真金细边 + 上缘水线。这座楼是石与金，
+   玻璃只做「展厅隔断」的透光，⛔ 不做 Aqua 的折射球面。 */
+.glass{
+  border-radius:var(--radius-lg);
+  background:
+    linear-gradient(154deg,rgba(255,255,255,.46) 0%,rgba(255,255,255,.10) 44%,rgba(255,255,255,0) 62%),
+    linear-gradient(135deg,rgba(253,250,243,.80) 0%,rgba(238,228,205,.54) 100%);
+  -webkit-backdrop-filter:blur(14px) saturate(104%);
+  backdrop-filter:blur(14px) saturate(104%);
+  border:1px solid rgba(176,138,43,.56);
+  box-shadow:
+    0 20px 44px rgba(70,54,26,.13),
+    0 2px 6px rgba(70,54,26,.05),
+    inset 0 1px 0 rgba(255,255,255,.94),
+    inset 0 -1px 0 rgba(176,138,43,.20);
+}
+
+/* 胶囊三态：汉白玉铭牌 / 鎏金铭牌 / 玉绿铭牌。
+   上下内距 10 / 14 沿用 CJK 行盒补偿（1.7 行高下字墨偏低约 2px）。
+   智造黑单字重（400），此处不给 weight，避免合成粗体。 */
+.pill{
+  padding:14px 22px 10px;
+  border-radius:var(--radius);
+  font-family:var(--font-button);
+  font-weight:400;
+  font-size:16px;
+  color:var(--text-1);
+  background:linear-gradient(180deg,#fdf9f0 0%,#f3e8cf 52%,#e7d7b4 100%);
+  border:1px solid rgba(176,138,43,.58);
+  box-shadow:0 2px 6px rgba(90,70,30,.10),inset 0 1px 0 rgba(255,255,255,.92);
+}
+.pill-accent{
+  padding:14px 22px 10px;
+  border-radius:var(--radius);
+  font-family:var(--font-button);
+  font-weight:400;
+  font-size:16px;
+  color:var(--accent-ink);
+  background:linear-gradient(180deg,#e6cd77 0%,#cda845 46%,#b08a2b 100%);
+  border:1px solid rgba(90,66,10,.42);
+  box-shadow:0 3px 8px rgba(80,60,10,.14),inset 0 1px 0 rgba(255,255,255,.48);
+}
+.pill-good{
+  padding:14px 22px 10px;
+  border-radius:var(--radius);
+  font-family:var(--font-button);
+  font-weight:400;
+  font-size:16px;
+  color:#fbf6ec;
+  background:linear-gradient(180deg,#4f8269,#3e6e58);
+  border:1px solid rgba(28,54,42,.48);
+  box-shadow:0 2px 6px rgba(30,52,40,.16),inset 0 1px 0 rgba(255,255,255,.22);
+}
+
+.divider{background:var(--border)}
+/* 高亮标线：一道 3px 金线 + 下方 1px 金影（双线，不叠成金条） */
+.divider-accent{
+  height:11px;width:119px;border:none;border-radius:0;box-shadow:none;
+  background:none;
+  background-image:
+    radial-gradient(circle 4px at 5px 50%,var(--red) 96%,transparent),
+    radial-gradient(circle 4px at 32px 50%,var(--gold) 96%,transparent),
+    radial-gradient(circle 4px at 59px 50%,#47806A 96%,transparent),
+    radial-gradient(circle 4px at 86px 50%,var(--gold) 96%,transparent),
+    radial-gradient(circle 4px at 113px 50%,var(--red) 96%,transparent);
+}
+
+/* —— 苏式这一层：白桦直纹（原主题的白桦木饰面）与套娃线稿 ——
+   大厦本就是「中苏友好」的产物，俄式彩绘的元素留作记号，不铺底。 */
+.fb-birch{
+  background-color:#efe2c4;
+  background-image:
+    repeating-linear-gradient(92deg,transparent 0 21px,rgba(120,84,42,.30) 21px 23px),
+    repeating-linear-gradient(93.4deg,transparent 0 7px,rgba(120,84,42,.085) 7px 7.9px),
+    linear-gradient(180deg,rgba(255,255,255,.32),rgba(196,158,104,.12));
+}
+.fb-doll{
+  display:inline-block;width:126px;height:80px;
+  background-repeat:no-repeat;background-position:center;background-size:contain;
+  background-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20158%20100%22%20width%3D%22158%22%20height%3D%22100%22%3E%3Cg%20transform%3D%22translate%280%2C0%29%20translate%2850%2C92%29%20scale%281.0%29%20translate%28-50%2C-92%29%22%20stroke-width%3D%222.1%22%20fill%3D%22none%22%20stroke%3D%22%23B08A2B%22%20stroke-linecap%3D%22round%22%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2226%22%20r%3D%2215%22%2F%3E%3Cpath%20d%3D%22M38%2040C29%2046%2022%2061%2022%2077c0%2010%204%2015%2010%2015h36c6%200%2010-5%2010-15%200-16-7-31-16-37%22%2F%3E%3C%2Fg%3E%3Cg%20transform%3D%22translate%2850%2C0%29%20translate%2850%2C92%29%20scale%280.72%29%20translate%28-50%2C-92%29%22%20stroke-width%3D%221.7%22%20fill%3D%22none%22%20stroke%3D%22%23B08A2B%22%20stroke-linecap%3D%22round%22%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2226%22%20r%3D%2215%22%2F%3E%3Cpath%20d%3D%22M38%2040C29%2046%2022%2061%2022%2077c0%2010%204%2015%2010%2015h36c6%200%2010-5%2010-15%200-16-7-31-16-37%22%2F%3E%3C%2Fg%3E%3Cg%20transform%3D%22translate%2894%2C0%29%20translate%2850%2C92%29%20scale%280.5%29%20translate%28-50%2C-92%29%22%20stroke-width%3D%221.4%22%20fill%3D%22none%22%20stroke%3D%22%23B08A2B%22%20stroke-linecap%3D%22round%22%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2226%22%20r%3D%2215%22%2F%3E%3Cpath%20d%3D%22M38%2040C29%2046%2022%2061%2022%2077c0%2010%204%2015%2010%2015h36c6%200%2010-5%2010-15%200-16-7-31-16-37%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E");
+}
+
+
+/* 进度条压在门槛金线上：走到哪，金线亮到哪 */
+.progress-bar{height:2px;bottom:14px;background:rgba(176,138,43,.18)}
+.progress-bar > span{background:linear-gradient(90deg,var(--gold-lo),var(--gold));box-shadow:none}
+
+/* 选项：静息态是水磨石托盘（石子稀疏、低对比）；判对 / 选错用磨石里的墨绿与砖红点一下 */
+
+
+
+
+
+.quiz-reveal{border-top:3px solid var(--gold);background:var(--marble);box-shadow:inset 0 1px 0 rgba(255,255,255,.95)}
+
+/* 相框：汉白玉内衬 + 鎏金细边（不用钢边，这座楼的金是贴上去的） */
+.img-frame{
+  border-radius:var(--radius-sm);
+  padding:6px;
+  background:linear-gradient(180deg,#fdf9f0,#e9dcc0);
+  border:1px solid rgba(176,138,43,.52);
+  box-shadow:inset 0 1px 0 #ffffff,var(--shadow);
+}
+.img-tag{
+  background:rgba(176,138,43,.94);
+  color:var(--accent-ink);
+  border:1px solid rgba(90,66,10,.36);
+  text-transform:none;
+  letter-spacing:.04em;
+  font-family:var(--font-note);
+}
+.mono{font-family:var(--font-mono)}
+.img-cap{font-family:var(--font-note)}
+
+/* —— 材质 / 标记工具类（重建新增，供风格板与导览面板直接使用） —— */
+/* 彩色水磨石：浅绿底 + 四种石子，周期互质避免看出平铺 */
+.fb-terrazzo{
+  background-color:var(--terrazzo);
+  background-image:
+    var(--fb-terrazzo-tile),
+    var(--fb-grain),
+    radial-gradient(120% 90% at 20% 0%,rgba(255,255,255,.30) 0%,rgba(255,255,255,0) 66%);
+  background-size:170px 170px,150px 150px,100% 100%;
+}
+.fb-mint{
+  background-color:var(--mint);
+  background-image:
+    radial-gradient(90% 58% at 50% 4%,rgba(255,255,255,.78) 0%,rgba(255,255,255,0) 56%),
+    repeating-radial-gradient(circle at 50% 118%,
+      rgba(176,138,43,.11) 0 1.5px,transparent 1.5px 46px),
+    radial-gradient(96% 92% at 50% 44%,rgba(62,110,88,0) 40%,rgba(62,110,88,.15) 100%);
+}
+/* 水刷石石墙：噪声骨料 + 几颗粗石 + 一道石缝（只作样本，不进卡片正文） */
+.fb-stone{
+  background-color:var(--stone);
+  background-image:
+    var(--fb-grain),
+    var(--fb-grain),
+    radial-gradient(ellipse 5px 4px at 24% 32%,rgba(120,96,60,.12) 0%,rgba(120,96,60,0) 100%),
+    radial-gradient(ellipse 4px 5px at 71% 74%,rgba(120,96,60,.10) 0%,rgba(120,96,60,0) 100%),
+    repeating-linear-gradient(0deg,transparent 0 57px,rgba(120,96,60,.10) 57px 58px),
+    linear-gradient(180deg,rgba(255,255,255,.34),rgba(214,190,147,.16));
+  background-size:96px 96px,58px 58px,97px 89px,73px 101px,auto,auto;
+}
+/* 鎏金面：竖向金色阶 + 斜向一道薄光 + 顶亮倒角 */
+.fb-gold{
+  background-color:var(--gold);
+  background-image:
+    linear-gradient(104deg,rgba(255,255,255,0) 30%,rgba(255,255,255,.20) 46%,rgba(255,255,255,0) 62%),
+    linear-gradient(180deg,#e8d086 0%,#cda845 38%,#b08a2b 74%,#8a6a18 100%);
+  border-top:1px solid rgba(255,255,255,.55);
+  border-bottom:1px solid rgba(90,66,10,.40);
+}
+/* 序馆穹顶：薄荷绿底 + 金色花束的四十道辐射 + 顶光 + 边缘暗角（读作仰视穹顶） */
+/* 谷穗檐带：斯大林式装饰的核心母题之一是谷穗（ears of corn，见 Stalinist architecture
+   的装饰清单：五角星、谷穗、镰刀锤子）。原先是等距细柱，读作栅栏；
+   改成「穗粒节奏」——每 16px 一个三粒穗（1px 细粒 + 2px 粗粒 + 1px 细粒），
+   穗尖靠上、穗根靠下，用竖向渐变做出穗的锥度。只 9px 高，读作檐口花饰。 */
+.fb-frieze{
+  height:9px;
+  border-top:1px solid rgba(176,138,43,.44);
+  border-bottom:1px solid rgba(176,138,43,.26);
+  background:
+    repeating-linear-gradient(90deg,
+      rgba(176,138,43,.52) 0 1px,transparent 1px 4px,
+      rgba(176,138,43,.34) 4px 6px,transparent 6px 8px,
+      rgba(176,138,43,.52) 8px 9px,transparent 9px 16px),
+    linear-gradient(180deg,rgba(176,138,43,.20) 0%,rgba(176,138,43,.10) 46%,rgba(176,138,43,.03) 100%);
+}
+/* 红玻璃：塔顶五角星的材质本体。深红玻璃有厚度感——中心透光、边缘积色，
+   斜向一道镜面高光，不能画成纯色块（纯色读作塑料贴纸）。 */
+.fb-redglass{
+  background-color:#881e21;
+  background-image:
+    linear-gradient(118deg,rgba(255,255,255,0) 22%,rgba(255,214,206,.42) 40%,rgba(255,255,255,0) 58%),
+    radial-gradient(120% 110% at 34% 26%,#c2454a 0%,#9c2226 42%,#881e21 68%,#5c1215 100%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.34),inset 0 -2px 6px -3px rgba(40,6,8,.70);
+}
+
+/* 漫射顶光：序馆穹顶的采光。冷白偏暖的均质天光，中心亮、边缘收，
+   不能做成彩色渐变（那是天空，不是顶光）。 */
+.fb-daylight{
+  background-color:#fbf6ec;
+  background-image:
+    radial-gradient(74% 74% at 50% 34%,#ffffff 0%,#fdfaf3 38%,#f2e8d2 74%,#e2d4b8 100%),
+    radial-gradient(120% 90% at 50% 0%,rgba(255,255,255,.90),rgba(255,255,255,0) 62%);
+}
+
+/* 红玻璃五角星：真正的五角星（原先是旋转 45° 的方块，读作菱形，不是星）。
+   两层 clip-path 叠出「红玻璃面 + 鎏金细边」：底层外扩 1px 作金边，上层红玻璃。
+   clip-path 会吃掉 border，所以金边只能用叠层做，不能用 border。
+   尺寸由 width/height 控制，默认 16px。 */
+.fb-star{
+  --fb-star-shape:polygon(50% 0%,61.8% 34.5%,98% 34.5%,68.6% 56.6%,79.4% 90.5%,50% 69.4%,20.6% 90.5%,31.4% 56.6%,2% 34.5%,38.2% 34.5%);
+  /* 尺寸抽成 token：星形在 12–14px 时五个尖角会被抗锯齿吃掉，读作模糊红点。
+     默认提到 20px；用在行内标记时按需覆盖 --fb-star-size。 */
+  --fb-star-size:20px;
+  position:relative;display:inline-block;
+  width:var(--fb-star-size);height:var(--fb-star-size);
+  background:none;border:none;transform:none;
+  flex:0 0 auto;
+}
+.fb-star::before{
+  content:"";position:absolute;inset:-1px;
+  background:var(--gold);
+  clip-path:var(--fb-star-shape);
+}
+.fb-star::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg,#c23a36 0%,#9c2226 46%,#6f1013 100%);
+  clip-path:var(--fb-star-shape);
+}
+.fb-anchor{
+  display:inline-flex;align-items:center;gap:11px;
+  padding:10px 18px 13px;border-radius:var(--radius);
+  background:linear-gradient(180deg,#fdf9f0,#f3e8cf);
+  color:var(--text-1);
+  font-family:var(--font-button);font-weight:400;
+  border:1px solid rgba(176,138,43,.58);
+}
+/* 已选锚点的前置标记：原先是 8px 红方块，与「红玻璃星」是同一语义（选中 / 标记），
+   统一成五角星。8px 的星读不出来，给到 15px；drop-shadow 描金边替代 border
+   （clip-path 会吃掉 border）。 */
+.fb-anchor::before{
+  content:"";flex:0 0 auto;width:18px;height:18px;
+  background:linear-gradient(180deg,#c23a36 0%,#9c2226 46%,#6f1013 100%);
+  clip-path:polygon(50% 0%,61.8% 34.5%,98% 34.5%,68.6% 56.6%,79.4% 90.5%,50% 69.4%,20.6% 90.5%,31.4% 56.6%,2% 34.5%,38.2% 34.5%);
+  filter:drop-shadow(0 0 1px rgba(176,138,43,.95));
+}
+.fb-progress{height:8px;border-radius:0;background:var(--terrazzo-deep);overflow:hidden}
+.fb-progress > span{display:block;height:100%;width:28%;background:linear-gradient(90deg,var(--gold-lo),var(--gold-hi))}
+
+
+/* 次按钮：描边幽灵。与主按钮 .pill 等高（板内 13px 字 / 8px 内距 / 34px 高），
+   并排时不出现高度差。横向内距比主按钮宽 6px，因为描边按钮需要更多侧边呼吸。 */
+
+/* 警示条：红玻璃只做细条，不铺底 */
+/* 已选锚点：汉白玉底 + 鎏金细边，前置一枚红玻璃方点 */
+
+/* 已选锚点前置标记：与 .fb-anchor 一致，红玻璃五角星替代 8px 红方块。 */
+
+/* 进度：水磨石槽 + 鎏金条 */
+
+
+
+
+
+
+/* —— 字号与间距：六档收口（沿用 century-sq 的档位，2026-11-20）——
+   相邻级差全部 ≥25%，正文基准按字阶表给定 —— */
+h1.title,.h1{font-size:92px;margin:32px 0 16px}
+h2.title,.h2{font-size:68px;margin:24px 0 12px}
+h3,.h3{font-size:44px;margin:0 0 12px}
+h4,.h4{font-size:30px;margin:0 0 8px}
+.lede{font-size:30px;margin-top:16px}
+.eyebrow{font-size:16px}
+.kicker{font-size:16px}
+.pill{font-size:16px}
+.img-cap{font-size:16px}
+.img-tag{font-size:16px;padding:8px 16px}
+.card{padding:32px 40px}
+.row,.grid{gap:32px}
+.notes-overlay{font-size:24px}
+
+/* 正文语境不拿鎏金当文字色（对乳黄底只有 2.4:1），改主文字色 + 金线下划 */
+a{color:var(--text-1);text-decoration-color:var(--accent)}
