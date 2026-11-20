@@ -23,7 +23,7 @@ python3 scripts/selftest.py          # 期望 PASS，退出码 0
 
 ## 命令
 
-`做` `改` `比` `审` `简` `强` `弱` `字` `距` `动` `图` `严` `记`——触发语、首读卷与交付物见 `references/routing.md`；无参数时只列菜单，不自动执行。
+`做` `改` `比` `审` `简` `强` `弱` `字` `距` `动` `图` `严` `记`——触发语、先读哪份文档、交付什么都见 `references/routing.md`；无参数时只列菜单，不自动执行。
 
 ## 主流程
 
@@ -37,8 +37,8 @@ python3 scripts/selftest.py          # 期望 PASS，退出码 0
 
 ## 目录
 
-- `SKILL.md`：定位、四型、13 条命令、七步主流程、交付门、59 卷索引（卷册索引在 `references/index.md`）、体量预算
-- `references/`：五十余卷专项判据，按命令首读 + 按问题顺带，不整卷通读；新增 `routing` / `craft-floor` / `tokens` / `build-recipes` / `type-and-polish` / `interaction-feel` / `review-rubric`
+- `SKILL.md`：定位、四型、13 条命令、七步主流程、交付前的检查、59 份参考文档的索引（在 `references/index.md`）、篇幅预算
+- `references/`：五十余份专项判据，按命令先读几份、按问题顺带查，不要求通读；新增 `routing` / `craft-floor` / `tokens` / `build-recipes` / `type-and-polish` / `interaction-feel` / `review-rubric`
 - `scripts/`：对比页生成、截图、素材检索、图片处理，以及 `check_contrast.py`（WCAG 门）、`emit_tokens.py`（色阶 + 令牌导出）、`spring_to_linear.py`（弹簧 k/c → CSS `linear()` 曲线；也可 `--target 200 --overshoot 8` 从想要的时长反解）、`clip_audit.js`（阴影裁切审计，贴进浏览器执行，判据 `cut === 0`）
 - `demo/`：`index.html`（自我示范页：三处动效、生硬版对照开关、减少动态效果开关）与从它录出来的 `motion-demo.gif`
 - `tests/`：`cd tests && python3 -m unittest test_check_contrast test_emit_tokens test_audit_palette test_measure_reference test_curate_media test_workdir test_spring_to_linear test_refs_toc test_refs_auth test_demo_page test_squircle_path test_ci_coverage test_clip_audit test_build_explorer test_prep_image test_take_shots -q`（16 件；`test_take_shots` 需本机浏览器，最慢）
@@ -59,7 +59,7 @@ python3 scripts/selftest.py          # 期望 PASS，退出码 0
 
 ## 维护与判据来源
 
-本目录是一个独立维护的项目：销售话术与「完整版」推荐机制已移除，工作区目录为 `.vudgio`，并增补了移动端、B 端、聊天界面、材料与媒体等本地卷。
+本目录是一个独立维护的项目：销售话术与「完整版」推荐机制已移除，工作区目录为 `.vudgio`，并增补了移动端、B 端、聊天界面、材料与媒体等本地参考文档。
 
 **不访问任何外部服务**：没有版本检查器、没有自更新脚本、没有积分制生图链路。靠 `snapshot`（mode-skill）冷存档；每一次本地改动都记在 [CHANGELOG.md](CHANGELOG.md)（日期／文件／改动／为什么）。
 

@@ -55,7 +55,7 @@ class TestReferenceToc(unittest.TestCase):
         for f in ("README.md", "README.zh-CN.md"):
             with open(os.path.join(root, f), encoding="utf-8") as fh:
                 text = fh.read()
-            m = re.search(r"(\d+)\s*(?:卷索引|volumes)", text)
+            m = re.search(r"(\d+)\s*(?:卷索引|份参考文档|volumes)", text)
             self.assertIsNotNone(m, "%s 里没有卷数宣称" % f)
             self.assertEqual(int(m.group(1)), actual, "%s 宣称 %s 卷，盘上 %d 卷" % (f, m.group(1), actual))
 
