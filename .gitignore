@@ -18,3 +18,7 @@ demo/shots/
 node_modules/
 dist/
 *.pyc
+
+# 评审记录与过程文档不进公开仓库（2026-11-20）
+internal-reviews/
+docs/REVIEW-*
