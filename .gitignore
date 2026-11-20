@@ -1,0 +1,20 @@
+.DS_Store
+__pycache__/
+.env*
+!.env.example
+
+.curate-cache.json
+.curate-cache.json.lock/
+.curate-cache.json.*.tmp
+
+# 截图／录屏产物：`take_shots.mjs` 一条命令即可重跑（命令在 README），
+# 体积随视口与录制数线性涨，⛔ 不入库；评审证据要留就放任务目录。
+demo/shots/
+
+# Python/Node 发布常见排除
+.venv/
+.pytest_cache/
+.coverage*
+node_modules/
+dist/
+*.pyc

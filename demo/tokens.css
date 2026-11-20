@@ -1,0 +1,19 @@
+:root {
+  --color-brand-100: #ebffff;
+  --color-brand-200: #b1e6e3;
+  --color-brand-300: #7fc4bd;
+  --color-brand-400: #529f93;
+  --color-brand-500: #2f6f62;
+  --color-brand-600: #2a6757;
+  --color-brand-700: #25604c;
+  --color-brand-800: #205842;
+  --color-brand-900: #1b5038;
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+  --duration-press: 160ms;
+  --duration-tooltip: 200ms;
+  --duration-popover: 250ms;
+  --duration-panel: 400ms;
+  --duration-page: 500ms;
+}

@@ -1,0 +1,30 @@
+浮龟 Vudgio
+Copyright (c) 2026 L4ST-afk
+
+本项目是「约束满足轴」的界面设计判据库：先列可机判约束，再写带命令／阈值的达成判据，求满足解，逐条验收，结论取过／不过／证据不足。
+
+本项目随包附带 Alpine.js 3.17.4（MIT，assets/vendor/）与 Instrument Serif 字体（SIL OFL 1.1，assets/fonts/）；其许可全文见 THIRD_PARTY_NOTICES.md 与随附 OFL.txt。
+
+本项目并入或改写了下列来源的规则形态与判据，特此声明（正文不转载其实现；完整许可见 THIRD_PARTY_NOTICES.md，逐条取用见 references/sources.md）：
+
+  impeccable（架构：四型、命令面、质量地板）
+  Copyright (c) the impeccable contributors
+  Licensed under the Apache License, Version 2.0
+  https://www.apache.org/licenses/LICENSE-2.0
+
+  emil-design-eng（动效：动画四问、三条缓动、时长表、性能红线）
+  https://github.com/emilkowalski/skills
+  Copyright (c) 2026 Emil Kowalski
+  Licensed under the MIT License
+
+  Lens 材质语义与交互反馈判据（apple-design 卷 §12A 引用）
+  取自 MIT 项目 ruiqichenbiec/design-systems 的 SCOPE.md / DESIGN.md，
+  只取材质语义判据，不引入其实现。
+  Licensed under the MIT License
+
+本项目另从以下本机／社区技能移植了判据形态（只取算法与判据、不转载正文），逐条出处与边界见 references/sources.md：
+  refactoring-ui（约束与诊断）、apple-design（手感）、design-taste-frontend（反 AI 腔）、
+  教院塔 Quojuta（三态结论）、禅院塔 Zojuta（断言账与检查器工程）、
+  华盖心经（诚实缺口）、web-design-engineer（单文件边界）。
+
+除上述署名外，判据正文为本项目独立撰写。MIT 许可全文见 LICENSE；第三方许可全文见 THIRD_PARTY_NOTICES.md。

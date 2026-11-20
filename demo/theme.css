@@ -1,0 +1,12 @@
+/* Tailwind v4：v3 请改成 tailwind.config.js 的 theme.extend */
+@theme {
+  --color-brand-100: #ebffff;
+  --color-brand-200: #b1e6e3;
+  --color-brand-300: #7fc4bd;
+  --color-brand-400: #529f93;
+  --color-brand-500: #2f6f62;
+  --color-brand-600: #2a6757;
+  --color-brand-700: #25604c;
+  --color-brand-800: #205842;
+  --color-brand-900: #1b5038;
+}

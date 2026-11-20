@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>浮龟 · 动效示范</title>
+<link rel="stylesheet" href="tokens.css">
+<style>
+  :root{
+    --paper:#f7f6f3; --ink:#1c1a17; --ink-soft:#55514a;
+    --line:#dcd7cf; --card:#fffdfa;
+    /* 三条曲线由 scripts/spring_to_linear.py 反解，⛔ 手写 cubic-bezier */
+    --spring-press: linear(0.000, 0.048, 0.144, 0.289, 0.445, 0.574, 0.709, 0.806, 0.897, 0.964, 1.005, 1.036, 1.052, 1.058, 1.057, 1.052, 1.045, 1.036, 1.028, 1.020, 1.013, 1.008, 1.004, 1.000);
+    --spring-pop: linear(0.000, 0.059, 0.200, 0.353, 0.534, 0.698, 0.835, 0.939, 1.004, 1.051, 1.075, 1.082, 1.077, 1.066, 1.053, 1.039, 1.025, 1.014, 1.005, 1.000, 0.996, 0.994, 0.993, 0.994, 0.994, 0.996, 1.000);
+    --spring-settle: linear(0.000, 0.047, 0.150, 0.274, 0.397, 0.509, 0.607, 0.695, 0.761, 0.815, 0.857, 0.890, 0.916, 0.937, 0.952, 0.964, 0.973, 0.980, 0.985, 0.989, 0.992, 0.994, 0.995, 1.000);
+    --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+    --dur-press: 150ms; --dur-pop: 200ms; --dur-panel: 320ms;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font:16px/1.6 -apple-system, "PingFang SC", "Noto Sans SC", system-ui, sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1040px; margin:0 auto; padding:56px 32px 96px}
+  header{display:flex; align-items:flex-end; justify-content:space-between; gap:24px; flex-wrap:wrap;
+    border-bottom:1px solid var(--line); padding-bottom:20px}
+  h1{margin:0; font-size:30px; letter-spacing:.01em}
+  h1 small{display:block; margin-top:6px; font-size:14px; font-weight:400; color:var(--ink-soft)}
+  .rm-switch{display:flex; align-items:center; gap:10px; font-size:14px; color:var(--ink-soft)}
+  .rm-switch button{
+    appearance:none; border:1px solid var(--line); background:var(--card);
+    width:52px; height:28px; border-radius:999px; padding:2px; cursor:pointer;
+    transition:background-color 160ms ease, border-color 160ms ease;
+  }
+  .rm-switch button span{display:block; width:22px; height:22px; border-radius:50%;
+    background:var(--color-brand-500); transition:transform 160ms ease}
+  .rm-switch button[aria-checked="true"]{background:var(--color-brand-500); border-color:var(--color-brand-500)}
+  .rm-switch button[aria-checked="true"] span{background:#fff; transform:translateX(24px)} 
+
+  section{margin-top:40px}
+  .lede{margin:0 0 16px; color:var(--ink-soft); max-width:46em}
+  .card{
+    background:var(--card); border:1px solid var(--line); border-radius:14px;
+    padding:22px 22px 18px; display:grid; gap:16px;
+  }
+  .card h2{margin:0; font-size:16px; font-weight:600}
+  .card p{margin:0; font-size:14px; color:var(--ink-soft)}
+  .stage{
+    min-height:112px; border-radius:10px; background:#f0efe9;
+    display:flex; align-items:center; justify-content:center; gap:14px; overflow:hidden; position:relative;
+  }
+  .row{display:flex; gap:10px; flex-wrap:wrap}
+  .btn{
+    appearance:none; cursor:pointer; font:inherit; font-size:15px;
+    border:0; border-radius:10px; padding:11px 18px;
+    background:var(--color-brand-500); color:#fff;
+    transition:transform var(--dur-press) var(--spring-press), background-color 160ms ease;
+  }
+  .btn:active, .btn.pulse-on{transform:scale(.94)}
+  .btn.ghost{background:transparent; color:var(--ink); border:1px solid var(--line)}
+  .btn.ghost:hover{border-color:var(--color-brand-400)}
+
+  #drawer{
+    position:absolute; left:0; right:0; top:0; margin:0 auto; width:min(420px,80%);
+    background:var(--card); border:1px solid var(--line); border-radius:0 0 12px 12px;
+    padding:16px 18px; box-shadow:0 12px 28px rgba(28,26,23,.08);
+    transform:translateY(-100%); transition:transform var(--dur-panel) var(--ease-drawer);
+  }
+  #drawer[data-open="1"]{transform:translateY(0)}
+  #drawer b{font-size:14px}
+
+  .lift{display:flex; gap:16px; align-items:center}
+  .tile{
+    width:132px; height:88px; border-radius:12px; background:var(--card);
+    border:1px solid var(--line); display:grid; place-items:center; font-size:13px; color:var(--ink-soft);
+    transform:translateY(0); box-shadow:0 1px 2px rgba(28,26,23,.05);
+    transition:transform var(--dur-pop) var(--spring-pop), box-shadow var(--dur-pop) ease;
+  }
+  .tile[data-up="1"]{transform:translateY(-8px); box-shadow:0 14px 30px rgba(28,26,23,.12)}
+
+  .compare{display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:12px}
+  .compare .half{border:1px solid var(--line); border-radius:12px; overflow:hidden}
+  .compare .half > b{display:block; padding:10px 14px; font-size:13px; background:#efeee8; border-bottom:1px solid var(--line)}
+  .compare .half.before > b{color:#7a3b2a; background:#f6ece8}
+  .compare .half.after > b{color:var(--color-brand-700); background:#e8f0ed}
+  .surface{padding:16px; min-height:190px}
+  /* 修前：无壳——三张卡片各自浮动、间距不一、层级靠阴影硬撑 */
+  .floating{display:grid; gap:10px}
+  .floating .chip{margin:6px 0 0 14px; padding:10px 12px; border-radius:10px; background:#fff;
+    box-shadow:0 8px 18px rgba(28,26,23,.16); font-size:13px; border:0}
+  /* 修后：有壳——同一内容按一个栅格、一个层级、一条分隔线 */
+  .shelled{display:grid; gap:0; border:1px solid var(--line); border-radius:10px; background:var(--card)}
+  .shelled .chip{padding:12px 14px; font-size:13px; border-bottom:1px solid var(--line); background:transparent}
+  .shelled .chip:last-child{border-bottom:0}
+
+  footer{margin-top:48px; padding-top:18px; border-top:1px solid var(--line);
+    font-size:13px; color:var(--ink-soft); display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap}
+
+  @media (prefers-reduced-motion: reduce){ html:not(.rm-off) *{transition-duration:1ms!important; animation-duration:1ms!important} }
+  html.rm *{transition-duration:1ms!important; animation-duration:1ms!important}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>浮龟 · 动效示范
+      <small>三条曲线都由 <code>scripts/spring_to_linear.py</code> 反解；这一个开关等价于系统的「减少动态效果」。</small>
+    </h1>
+    <div class="rm-switch">
+      <span id="rm-label">减少动态效果</span>
+      <button id="rm" role="switch" aria-checked="false" aria-labelledby="rm-label"><span></span></button>
+    </div>
+  </header>
+
+  <section>
+    <p class="lede">按下、滑入、抬升这三处最容易出现两种毛病：动作比手感慢半拍，或者根本没有动效。下面每一处都能先看修复后的曲线，再切到生硬版对照。</p>
+
+    <div class="card">
+      <h2>一 · 按钮按下（150ms，过冲 6%）</h2>
+      <p>回弹比线性收尾更像按到实物；过冲控制在 6%，不会晃到整页。</p>
+      <div class="stage"><button class="btn" id="press">按一下</button></div>
+      <div class="row">
+        <button class="btn ghost" id="press-play">播放</button>
+        <button class="btn ghost" id="press-flat">切到生硬版（100ms linear）</button>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:20px">
+      <h2>二 · 抽屉滑入（320ms，无过冲）</h2>
+      <p>面板用 <code>--ease-drawer</code>：起步快、收尾稳。生硬版是等速平移。</p>
+      <div class="stage" style="min-height:150px">
+        <div id="drawer" data-open="0"><b>筛选</b> · 三个条件已生效</div>
+      </div>
+      <div class="row">
+        <button class="btn" id="drawer-play">打开 / 收起</button>
+        <button class="btn ghost" id="drawer-flat">切到生硬版</button>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:20px">
+      <h2>三 · 卡片抬升（200ms，过冲 8%）</h2>
+      <p>抬升的是层级，不是装饰：阴影跟着位移一起变，落点不飘。</p>
+      <div class="stage">
+        <div class="lift">
+          <div class="tile" id="tile">项目一</div>
+          <div class="tile">项目二</div>
+        </div>
+      </div>
+      <div class="row">
+        <button class="btn" id="lift-play">抬升 / 放下</button>
+        <button class="btn ghost" id="lift-flat">切到生硬版</button>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <p class="lede">同一个内容，两种「浮」。左边每张卡自己飘，间距与阴影都在抢话；右边有壳：一个栅格、一条分隔线、一个层级。</p>
+    <div class="compare">
+      <div class="half before">
+        <b>修前 · 有浮无壳</b>
+        <div class="surface floating">
+          <div class="chip">筛选条件</div>
+          <div class="chip">结果排序</div>
+          <div class="chip">导出范围</div>
+        </div>
+      </div>
+      <div class="half after">
+        <b>修后 · 浮而不散</b>
+        <div class="surface shelled">
+          <div class="chip">筛选条件</div>
+          <div class="chip">结果排序</div>
+          <div class="chip">导出范围</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span>浮而不散，龟以承之。</span>
+    <span>令牌由 <code>emit_tokens.py</code> 生成，对比度过 <code>check_contrast.py</code></span>
+  </footer>
+</div>
+
+<script>
+  const rm = document.getElementById('rm');
+  rm.addEventListener('click', () => {
+    const on = rm.getAttribute('aria-checked') === 'true';
+    rm.setAttribute('aria-checked', String(!on));
+    document.documentElement.classList.toggle('rm', !on);
+  });
+
+  // 「生硬版」只换曲线与时长，不改布局——对照的是手感，不是设计
+  const flat = (el, dur) => { el.style.transitionTimingFunction = 'linear'; el.style.transitionDuration = dur; };
+  const flatBtns = {
+    press: () => flat(document.getElementById('press'), '100ms'),
+    drawer: () => flat(document.getElementById('drawer'), '200ms'),
+    lift: () => flat(document.getElementById('tile'), '200ms'),
+  };
+  document.getElementById('press-flat').onclick = flatBtns.press;
+  document.getElementById('drawer-flat').onclick = flatBtns.drawer;
+  document.getElementById('lift-flat').onclick = flatBtns.lift;
+
+  const pulse = (el, ms) => {
+    el.classList.add('pulse-on');
+    setTimeout(() => el.classList.remove('pulse-on'), ms);
+  };
+  document.getElementById('press-play').onclick = () => pulse(document.getElementById('press'), 240);
+  document.getElementById('press').onclick = () => pulse(document.getElementById('press'), 240);
+
+  const drawer = document.getElementById('drawer');
+  document.getElementById('drawer-play').onclick = () => {
+    drawer.dataset.open = drawer.dataset.open === '1' ? '0' : '1';
+  };
+
+  const tile = document.getElementById('tile');
+  const toggleLift = () => { tile.dataset.up = tile.dataset.up === '1' ? '0' : '1'; };
+  document.getElementById('lift-play').onclick = toggleLift;
+  tile.addEventListener('mouseenter', () => { tile.dataset.up = '1'; });
+  tile.addEventListener('mouseleave', () => { tile.dataset.up = '0'; });
+</script>
+</body>
+</html>
