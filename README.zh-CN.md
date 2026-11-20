@@ -67,5 +67,5 @@ python3 scripts/selftest.py          # 期望 PASS，退出码 0
 
 ## 许可与署名
 
-MIT——见 [LICENSE](LICENSE)。第三方署名与许可全文见 [NOTICE](NOTICE) 与 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)，逐条判据出处与边界见 `references/sources.md`。贡献规范见 [CONTRIBUTING.md](CONTRIBUTING.md)；变更台账见 [CHANGELOG.md](CHANGELOG.md) / [CHANGELOG.en.md](CHANGELOG.en.md)。
+© 2026 L4ST-afk · MIT——见 [LICENSE](LICENSE)。第三方署名与许可全文见 [NOTICE](NOTICE) 与 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)，逐条判据出处与边界见 `references/sources.md`。贡献规范见 [CONTRIBUTING.md](CONTRIBUTING.md)；变更台账见 [CHANGELOG.md](CHANGELOG.md) / [CHANGELOG.en.md](CHANGELOG.en.md)。
 

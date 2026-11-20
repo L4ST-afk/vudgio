@@ -76,5 +76,5 @@ The 2026-11-14 criteria merge: refactoring-ui (constraint and diagnosis), impecc
 
 ## License and attribution
 
-MIT — see [LICENSE](LICENSE). Third-party attributions and full license texts are in [NOTICE](NOTICE) and [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md); per-criterion provenance and boundaries are in `references/sources.md`. Contributions: [CONTRIBUTING.md](CONTRIBUTING.md). Past changes: [CHANGELOG.md](CHANGELOG.md) / [CHANGELOG.en.md](CHANGELOG.en.md).
+© 2026 L4ST-afk · MIT — see [LICENSE](LICENSE). Third-party attributions and full license texts are in [NOTICE](NOTICE) and [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md); per-criterion provenance and boundaries are in `references/sources.md`. Contributions: [CONTRIBUTING.md](CONTRIBUTING.md). Past changes: [CHANGELOG.md](CHANGELOG.md) / [CHANGELOG.en.md](CHANGELOG.en.md).
 
