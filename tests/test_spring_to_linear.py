@@ -18,7 +18,7 @@ SCRIPT = os.path.join(os.path.dirname(HERE), "scripts", "spring_to_linear.py")
 
 
 def run(*args):
-    p = subprocess.run([sys.executable, SCRIPT, *args], capture_output=True, text=True, timeout=60)
+    p = subprocess.run([sys.executable, SCRIPT, *args], capture_output=True, text=True, encoding="utf-8", timeout=60)
     return p.returncode, p.stdout
 
 

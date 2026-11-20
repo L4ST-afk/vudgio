@@ -38,6 +38,13 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from check_contrast import contrast_ratio, hex_to_rgb  # 复用同一套色彩数学
 
+# Windows 控制台默认 cp1252，✓/⚠/中文会在 print 时抛 UnicodeEncodeError；
+# 统一按 UTF-8 输出，编不出的字符降级成 ?，别让编码把业务判断顶掉。
+for _stream in (sys.stdout, sys.stderr):
+    if hasattr(_stream, "reconfigure"):
+        _stream.reconfigure(encoding="utf-8", errors="replace")
+
+
 AA_NORMAL = 4.5
 NON_TEXT = 3.0
 LSTAR_MIN = 10.0        # 两个角色色之间最小的 CIE L* 差

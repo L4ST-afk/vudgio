@@ -24,6 +24,13 @@ import json
 import math
 import sys
 
+# Windows 控制台默认 cp1252，✓/⚠/中文会在 print 时抛 UnicodeEncodeError；
+# 统一按 UTF-8 输出，编不出的字符降级成 ?，别让编码把业务判断顶掉。
+for _stream in (sys.stdout, sys.stderr):
+    if hasattr(_stream, "reconfigure"):
+        _stream.reconfigure(encoding="utf-8", errors="replace")
+
+
 # 与 motion.md「手感」表同源：动作 → 刚度 k / 阻尼 c。⛔ 改表请同时改那边，两边不许漂。
 PRESETS = {
     "咔嗒": (375, 12),   # 磁铁吸合、卡扣：按钮、开关、下拉展开

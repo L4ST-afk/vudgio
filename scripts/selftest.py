@@ -8,6 +8,13 @@ import py_compile
 import subprocess
 import sys
 
+# Windows 控制台默认 cp1252，✓/⚠/中文会在 print 时抛 UnicodeEncodeError；
+# 统一按 UTF-8 输出，编不出的字符降级成 ?，别让编码把业务判断顶掉。
+for _stream in (sys.stdout, sys.stderr):
+    if hasattr(_stream, "reconfigure"):
+        _stream.reconfigure(encoding="utf-8", errors="replace")
+
+
 HERE = os.path.dirname(os.path.abspath(__file__))
 ENTRIES = ("build_explorer.py", "check_contrast.py", "emit_tokens.py", "spring_to_linear.py")
 
@@ -23,7 +30,7 @@ def main():
                 ok = False
     for entry in ENTRIES:
         p = subprocess.run([sys.executable, os.path.join(HERE, entry), "--help"],
-                           capture_output=True, text=True, timeout=30)
+                           capture_output=True, text=True, encoding="utf-8", timeout=30)
         out = p.stdout + p.stderr
         if p.returncode != 0 or "usage" not in out.lower():
             print("FAIL %s --help 起不来（rc=%d）：%s" % (entry, p.returncode, out[-300:]))

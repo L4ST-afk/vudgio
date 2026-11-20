@@ -20,6 +20,13 @@ import json
 import math
 import sys
 
+# Windows 控制台默认 cp1252，✓/⚠/中文会在 print 时抛 UnicodeEncodeError；
+# 统一按 UTF-8 输出，编不出的字符降级成 ?，别让编码把业务判断顶掉。
+for _stream in (sys.stdout, sys.stderr):
+    if hasattr(_stream, "reconfigure"):
+        _stream.reconfigure(encoding="utf-8", errors="replace")
+
+
 AA_NORMAL, AA_LARGE = 4.5, 3.0
 
 

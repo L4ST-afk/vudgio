@@ -13,7 +13,7 @@ SCRIPT = os.path.join(HERE, "..", "scripts", "emit_tokens.py")
 
 def run(*args):
     p = subprocess.run([sys.executable, SCRIPT] + list(args),
-                       capture_output=True, text=True, timeout=30)
+                       capture_output=True, text=True, encoding="utf-8", timeout=30)
     return p.returncode, p.stdout + p.stderr
 
 

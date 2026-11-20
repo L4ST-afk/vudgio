@@ -23,7 +23,7 @@ class TestClipAudit(unittest.TestCase):
         node = shutil.which("node")
         if not node:
             self.skipTest("没有 node，跳过语法检查")
-        r = subprocess.run([node, "--check", SCRIPT], capture_output=True, text=True, timeout=60)
+        r = subprocess.run([node, "--check", SCRIPT], capture_output=True, text=True, encoding="utf-8", timeout=60)
         self.assertEqual(r.returncode, 0, "语法不过：%s" % r.stderr.strip())
 
     def test_geometry_kernel(self):
@@ -41,7 +41,7 @@ const out = {
 };
 console.log(JSON.stringify(out));
 """
-        r = subprocess.run([node, "-e", probe], capture_output=True, text=True, timeout=60,
+        r = subprocess.run([node, "-e", probe], capture_output=True, text=True, encoding="utf-8", timeout=60,
                            env={**os.environ, "CLIP_AUDIT": SCRIPT})
         self.assertEqual(r.returncode, 0, r.stderr.strip())
         d = json.loads(r.stdout)

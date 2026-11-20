@@ -23,7 +23,7 @@ def parse_path(path):
 @unittest.skipUnless(NODE, "Node is not installed")
 class SquirclePathTests(unittest.TestCase):
     def run_cli(self, *args):
-        return subprocess.run([NODE, SCRIPT, *args], capture_output=True, text=True, cwd=ROOT)
+        return subprocess.run([NODE, SCRIPT, *args], capture_output=True, text=True, encoding="utf-8", cwd=ROOT)
 
     def test_help(self):
         r = self.run_cli("--help")
@@ -84,7 +84,7 @@ class SquirclePathTests(unittest.TestCase):
         code = ("const m = await import('./scripts/squircle_path.mjs');"
                 "console.log(m.squirclePoints({width: 100, height: 60, radius: 20}).points.length);")
         r = subprocess.run([NODE, "--input-type=module", "-e", code],
-                           capture_output=True, text=True, cwd=ROOT)
+                           capture_output=True, text=True, encoding="utf-8", cwd=ROOT)
         self.assertEqual(r.returncode, 0, r.stderr)
         self.assertEqual(r.stdout.strip(), "100")
         self.assertNotIn("--width", r.stderr)
