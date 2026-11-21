@@ -3,6 +3,14 @@
 > This file records **capability and criteria changes only**: what a version can do, how it differs from the previous one, and whether a threshold changed meaning.
 > Internal archaeology (source relationships, brand history, per-date work logs and review process) is kept in an internal file and is not shipped with the package.
 
+## v0.35.0 · 2026-11-22 — Destructive confirmation and scrubbed values
+
+- New section in `interaction-feel.md`, "Destructive confirmation and scrubbed values", with four criteria: hold-to-fill, slide-to-commit, two channels for scrubbed numbers (drag and type), and swipe-to-delete with a way back (commit past the threshold, spring back below it, offer undo after).
+- Two hard lines: release means cancel (leaving means nothing happened; ⛔ never wait a beat after release to catch a second press), and the finished state must settle into a static terminal state (⛔ no breathing, pulsing or sweeping afterwards). These four forms are for low-frequency actions only; high-frequency controls get no "effort" gesture.
+- `motion.md`: tooltip warmth is shared per group — the first in a group waits ~300ms, siblings open at once, leaving the group resets it (⛔ never time each one separately).
+- `components-motion.md`: states with real duration show progress against real elapsed time, end in a static terminal state, and failures stay failed with a reason.
+- Acceptance gains one check: release a destructive gesture halfway and it must return to its place with nothing committed.
+
 ## v0.34.4 · 2026-11-20 — Validation timing, criteria corrected
 
 - Field state expanded from four to six: `pristine` / `prefilled` / `editing` / `blurred` / `submitted` / `dirty-after-submit`. `blurred` means "lost focus" only — value emptiness no longer splits the state; empty values are judged by the rule layer.
