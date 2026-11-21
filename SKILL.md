@@ -13,7 +13,7 @@ allowed-tools:
   - Bash(python3 *spring_to_linear.py*)
   - Bash(python3 *measure_reference.py*)
 metadata:
-  version: "0.35.0+fugu20261122"
+  version: "0.36.0+fugu20261122"
   compatibility: "核心为宿主中立的文本流程，不依赖其他 Skill 或指定模型。可选脚本需要 Python 3.10+ 标准库或 Node 18+；产物仅需现代浏览器；本机地址候选需要对应的本地开发服务器在运行。实际视觉验收需要看图能力；交互验收需要可操作环境；独立评审需要隔离上下文且能看图的执行者。"
 ---
 

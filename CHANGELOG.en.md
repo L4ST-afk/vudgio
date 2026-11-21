@@ -3,6 +3,13 @@
 > This file records **capability and criteria changes only**: what a version can do, how it differs from the previous one, and whether a threshold changed meaning.
 > Internal archaeology (source relationships, brand history, per-date work logs and review process) is kept in an internal file and is not shipped with the package.
 
+## v0.36.0 · 2026-11-22 — Translated copy, colour area, evidence anchors
+
+- `type-and-polish.md` gains "Translated copy and long strings": widths follow the text, action bars may wrap, key actions are never truncated, and the order is copy → layout → type size last. New **three-way check**: longest real translation + 375px viewport + 200% font size, with no clipped text, no colliding buttons and no horizontal overflow. ⛔ Never accept the source-language string as the test sample.
+- `tokens.md` gains "Colour area": roughly 60 primary / 30 secondary / ≤10 accent; two colours near 1:1 means they are fighting to be primary, fixed by area and lightness, not hue. Measured by block or colour-cluster counts, ⛔ never "it looks a bit busy".
+- `review-rubric.md` now requires a traceable anchor per finding (file + line, test name, commit or screenshot name); a finding without one counts as insufficient evidence.
+- All three are criteria only; no new volume.
+
 ## v0.35.0 · 2026-11-22 — Destructive confirmation and scrubbed values
 
 - New section in `interaction-feel.md`, "Destructive confirmation and scrubbed values", with four criteria: hold-to-fill, slide-to-commit, two channels for scrubbed numbers (drag and type), and swipe-to-delete with a way back (commit past the threshold, spring back below it, offer undo after).
