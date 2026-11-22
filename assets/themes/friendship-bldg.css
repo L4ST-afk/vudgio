@@ -194,6 +194,9 @@ h3,.h3,h4,.h4{font-weight:400}
 /* 展厅玻璃：暖白半透 + 真金细边 + 上缘水线。这座楼是石与金，
    玻璃只做「展厅隔断」的透光，⛔ 不做 Aqua 的折射球面。 */
 .glass{
+  /* glass 常作浮层容器，显式给定位上下文，任何 absolute 子元素都锚在卡片内。 */
+  position:relative;
+
   border-radius:var(--radius-lg);
   background:
     linear-gradient(154deg,rgba(255,255,255,.46) 0%,rgba(255,255,255,.10) 44%,rgba(255,255,255,0) 62%),
