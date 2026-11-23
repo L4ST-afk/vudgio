@@ -19,6 +19,12 @@ import re
 import sys
 from pathlib import Path
 
+# Windows 上 stdout 走管道时是 cp1252/cp936，中文与符号会抛 UnicodeEncodeError，
+# 让「一切正常」也被判成退出码 1。和其它脚本一样，先把两条流收到 UTF-8。
+for _stream in (sys.stdout, sys.stderr):
+    if hasattr(_stream, "reconfigure"):
+        _stream.reconfigure(encoding="utf-8", errors="replace")
+
 BLUR_CAP = 12.0          # px，硬线；超过就不是「演示机上的玻璃」而是糊化
 BLUR_WARN = 9.0
 BACKDROP_CAP = 3         # 同屏真实 backdrop 层上限

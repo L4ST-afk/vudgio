@@ -1,5 +1,10 @@
 # 浮龟Vudgio 变更记录
 
+## v0.39.1｜2026-11-23 Windows 输出编码、CI 门禁收紧
+
+- `scripts/glass_audit.py` 补上其余脚本同款的 UTF-8 收口：Windows 上 stdout 走管道时是 cp1252，`print` 带 ✓／中文会抛 `UnicodeEncodeError`，一份完全合规的页面也被判成退出码 1（CI 的 windows-latest 跑的正是这条路，抓出真问题）。
+- `.github/workflows/tests.yml`：顶层 `permissions: contents: read`；`paths` 补 `README.md`／`README.zh-CN.md`／`demo/**`（`test_refs_toc`、`test_ci_coverage` 读 README，`test_demo_page` 读 demo，改它们此前不会触发 CI）；把 README 明写的安装验收 `scripts/selftest.py` 接进 core job；三个第三方 action pin 到 commit SHA（注释留版本号）。
+
 ## v0.39.0｜2026-11-23 玻璃通道：判据卷、机械闸、探测即触发
 
 - 新卷 [`references/glass.md`](references/glass.md)：玻璃的判据正本——三层结构（底／描边／光）、八个数值的安全区间（blur ≤12px、tint alpha .18–.40、edge .35–.70）、同屏 backdrop ≤3 的账目、T0/T1/T2 档位与降级四件套、动效禁逐帧 blur，以及「做不到的部分明说」（实时反光、曲率连续圆角、真折射仅 Chromium）。

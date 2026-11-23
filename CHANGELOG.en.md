@@ -3,6 +3,11 @@
 > This file records **capability and criteria changes only**: what a version can do, how it differs from the previous one, and whether a threshold changed meaning.
 > Internal archaeology (source relationships, brand history, per-date work logs and review process) is kept in an internal file and is not shipped with the package.
 
+## v0.39.1 · 2026-11-23 — Windows output encoding, tighter CI gate
+
+- `scripts/glass_audit.py` now sets both streams to UTF-8 like every other script: on Windows stdout through a pipe is cp1252, so printing ✓ or Chinese raised `UnicodeEncodeError` and a fully compliant page exited 1 (windows-latest in CI hit exactly this path).
+- `.github/workflows/tests.yml`: top-level `permissions: contents: read`; `paths` now include `README.md`, `README.zh-CN.md` and `demo/**` (the README-reading and demo-reading gate tests did not previously trigger CI); the README's install check `scripts/selftest.py` runs in the core job; all three third-party actions are pinned to commit SHAs with the version kept in a comment.
+
 ## v0.39.0 · 2026-11-23 — Glass channel: criteria volume, mechanical gate, trigger-on-detect
 
 - New volume `references/glass.md`: the criteria of record for glass surfaces — the three-layer structure (tint / edge / light), safe ranges for eight values (blur ≤12px, tint alpha .18–.40, edge .35–.70), a same-screen backdrop budget of 3, the T0/T1/T2 tiers with the four degrade signals, no per-frame blur animation, and an explicit list of what cannot be done (real-time reflection, continuous-curvature corners, true refraction only on Chromium).
