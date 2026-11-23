@@ -13,7 +13,7 @@ allowed-tools:
   - Bash(python3 *spring_to_linear.py*)
   - Bash(python3 *measure_reference.py*)
 metadata:
-  version: "0.36.0+fugu20261122"
+  version: "0.38.0+fugu20261123"
   compatibility: "核心为宿主中立的文本流程，不依赖其他 Skill 或指定模型。可选脚本需要 Python 3.10+ 标准库或 Node 18+；产物仅需现代浏览器；本机地址候选需要对应的本地开发服务器在运行。实际视觉验收需要看图能力；交互验收需要可操作环境；独立评审需要隔离上下文且能看图的执行者。"
 ---
 
@@ -44,8 +44,8 @@ metadata:
 | 层 | 管什么 | 正本 |
 |---|---|---|
 | C 采集 | 约束从哪来、产品事实与分型 | [约束采集](references/sources.md) |
-| D 判据 | 令牌、对比度、组件与排版的可判阈值 | [令牌](references/tokens.md)、[质量地板](references/craft-floor.md)、[组件配方](references/build-recipes.md)、[校验时机](references/validation-timing.md)、[排版与收尾](references/type-and-polish.md) |
-| S 求解 | 布局、材质、素材、动效的满足解库 | [布局与视口](references/layout-and-viewport.md)、[素材](references/media.md)、[动效](references/motion.md)、[滚动约束](references/scroll-narrative.md) |
+| D 判据 | 令牌、对比度、组件与排版的可判阈值、字段分层 | [令牌](references/tokens.md)、[质量地板](references/craft-floor.md)、[组件配方](references/build-recipes.md)、[校验时机](references/validation-timing.md)、[排版与收尾](references/type-and-polish.md) |
+| S 求解 | 布局、容器宽度、材质、素材、动效与转接点的满足解库 | [布局与视口](references/layout-and-viewport.md)、[素材](references/media.md)、[动效](references/motion.md)、[滚动约束](references/scroll-narrative.md) |
 | M 手感 | 可中断、速度交接、拖拽连续性、破坏性确认 | [手感](references/interaction-feel.md)、[桌面组件](references/components-motion.md) |
 | V 验收 | 三态结论、派发协议、证据格式 | [评审规则](references/review-rubric.md)、[判据验收者](references/reviewer-manual.md)、[视觉派发](references/visual-review.md) |
 | R 路由 | 命令名称、哪份文档何时读、工作区 | [路由](references/routing.md)、[卷册索引](references/index.md)、[工作区](references/workdir.md) |
