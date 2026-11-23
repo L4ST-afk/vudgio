@@ -1,28 +1,12 @@
 # Vudgio · Change Log (English)
 
+## v0.38.1 · 2026-11-23 — Cards or list: choose before laying out
+
+- `build-recipes.md` adds three selection questions before the list section: (1) is the user browsing or comparing — browsing suits cards, comparing suits a list, and comparing only works when the same field is aligned into a column (eight items, "which is the oldest": cards cost eight back-and-forth eye jumps, an aligned column is one sweep); (2) can each item stand alone — a cover, a title and the ability to open or drag it earn a card, while a line of text plus a toggle belongs in a divider-separated group; (3) is it a card inside a card — drop the inner border and separate by key plus divider instead. The test: switch the same data between both variants and see which finds the target faster; more than eight items with one field to compare is almost always a list.
+- `build-recipes.md` card section gains a prohibition: ⛔ a card wrapping a line of text and a toggle; the existing "don't force cards" line stays.
+
 > This file records **capability and criteria changes only**: what a version can do, how it differs from the previous one, and whether a threshold changed meaning.
 > Internal archaeology (source relationships, brand history, per-date work logs and review process) is kept in an internal file and is not shipped with the package.
-
-## v0.39.1 · 2026-11-23 — Windows output encoding, tighter CI gate
-
-- `scripts/glass_audit.py` now sets both streams to UTF-8 like every other script: on Windows stdout through a pipe is cp1252, so printing ✓ or Chinese raised `UnicodeEncodeError` and a fully compliant page exited 1 (windows-latest in CI hit exactly this path).
-- `.github/workflows/tests.yml`: top-level `permissions: contents: read`; `paths` now include `README.md`, `README.zh-CN.md` and `demo/**` (the README-reading and demo-reading gate tests did not previously trigger CI); the README's install check `scripts/selftest.py` runs in the core job; all three third-party actions are pinned to commit SHAs with the version kept in a comment.
-
-## v0.39.0 · 2026-11-23 — Glass channel: criteria volume, mechanical gate, trigger-on-detect
-
-- New volume `references/glass.md`: the criteria of record for glass surfaces — the three-layer structure (tint / edge / light), safe ranges for eight values (blur ≤12px, tint alpha .18–.40, edge .35–.70), a same-screen backdrop budget of 3, the T0/T1/T2 tiers with the four degrade signals, no per-frame blur animation, and an explicit list of what cannot be done (real-time reflection, continuous-curvature corners, true refraction only on Chromium).
-- New script `scripts/glass_audit.py`: checks blur over the cap, glass stacked on glass, per-screen over-budget, blur without a tint, missing edge and inner highlight, translucent text on glass, `transition/animation` on backdrop-filter, always-on `will-change`, and missing or single-signal degradation; `--json` for machines, `--tokens` prints a compliant variable block. E-level exits 1.
-- Routing gains a "when glass is detected" section: any `backdrop-filter`, `blur(...)`, translucent card, frosted overlay or glass panel triggers the gate → fix by criteria → re-run, without asking whether to use glass. Only the four failure modes are fixed (blurry, dropping frames, unreadable, grey mush); the user's design direction stays.
-- The criteria table gains a row, and CI plus both READMEs now list 17 regression modules.
-
-## Unreleased · 2026-11-23 — External code review (scripts)
-
-External review (GitHub Copilot CLI, read-only), 0 high / 3 medium / 1 low, all in `scripts/`:
-
-- `measure_reference.py`: `regions[].name` becomes an exported filename, so `../` or a separator could write outside `--out-dir` and overwrite another file. Names containing a separator or `..` are now refused, and the resolved parent is compared with the target directory before writing.
-- `clip_audit.js` measures shadow extent per side: it used `blur + spread` only, so a large offset like `box-shadow: 100px 0 0` was missed and an already clipped shadow still reported `cut: 0`.
-- `clip_audit.js` no longer substitutes the element rectangle for `clip-path`: `circle` / `ellipse` / `inset` / `polygon` use their real bounding boxes, and shapes it cannot resolve (`path()`, `url()`) go into `unknown` and force `ok: false` — not audited is not passed.
-- `curate_media.mjs`: a failed per-object detail request from the Met or Rijks was dropped silently, so an incomplete aggregate looked complete; failures now travel back in `errors`.
 
 ## v0.38.0 · 2026-11-23 — Field layering, boundaries, container widths, long tasks
 

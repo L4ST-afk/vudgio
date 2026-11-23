@@ -1,25 +1,9 @@
 # 浮龟Vudgio 变更记录
 
-## v0.39.1｜2026-11-23 Windows 输出编码、CI 门禁收紧
+## v0.38.1｜2026-11-23 卡片还是列表：先选型再摆
 
-- `scripts/glass_audit.py` 补上其余脚本同款的 UTF-8 收口：Windows 上 stdout 走管道时是 cp1252，`print` 带 ✓／中文会抛 `UnicodeEncodeError`，一份完全合规的页面也被判成退出码 1（CI 的 windows-latest 跑的正是这条路，抓出真问题）。
-- `.github/workflows/tests.yml`：顶层 `permissions: contents: read`；`paths` 补 `README.md`／`README.zh-CN.md`／`demo/**`（`test_refs_toc`、`test_ci_coverage` 读 README，`test_demo_page` 读 demo，改它们此前不会触发 CI）；把 README 明写的安装验收 `scripts/selftest.py` 接进 core job；三个第三方 action pin 到 commit SHA（注释留版本号）。
-
-## v0.39.0｜2026-11-23 玻璃通道：判据卷、机械闸、探测即触发
-
-- 新卷 [`references/glass.md`](references/glass.md)：玻璃的判据正本——三层结构（底／描边／光）、八个数值的安全区间（blur ≤12px、tint alpha .18–.40、edge .35–.70）、同屏 backdrop ≤3 的账目、T0/T1/T2 档位与降级四件套、动效禁逐帧 blur，以及「做不到的部分明说」（实时反光、曲率连续圆角、真折射仅 Chromium）。
-- 新脚本 `scripts/glass_audit.py`：静态机判 blur 超限、玻璃叠玻璃、同屏超账、只有 blur 没有底、缺描边与内高光、玻璃上文字过淡、`transition/animation` 动 backdrop、`will-change` 常驻、降级缺失或只押 `prefers-reduced-transparency`；`--json` 机器读，`--tokens` 直接吐一套合规变量块。E 级退出码 1。
-- 路由补「识别到玻璃时」：页面里出现 `backdrop-filter`／`blur(...)`／半透明卡片／磨砂浮层／`frosted`／毛玻璃，**不问要不要做玻璃**，直接跑闸 → 按判据改 → 复跑；只修「会糊、会掉帧、会失读、会叠成灰块」四件，不改用户的设计方向。
-- 判据清单加一行（玻璃判据／`glass_audit.py`／E 级退出码 1），CI 与两份 README 的回归命令同步为 17 件。
-
-## 未发版｜2026-11-23 外部代码审查（脚本层）
-
-外部审查（GitHub Copilot CLI 只读模式）0 高 3 中 1 低，四处都在 `scripts/`：
-
-- `measure_reference.py`：`regions[].name` 会拼成导出文件名，带 `../` 或分隔符就能写到 `--out-dir` 之外并覆盖别人的文件。现在名称含分隔符或 `..` 直接拒；导出前再比一次父目录，越界即报。
-- `clip_audit.js` 阴影外扩按边算：原先只取 `blur+spread`，`box-shadow: 100px 0 0` 这类大偏移会被漏掉，实际已被裁的阴影仍报 `cut: 0`。
-- `clip_audit.js` 不再拿元素矩形顶替 `clip-path`：`circle`／`ellipse`／`inset`／`polygon` 按真实包围盒判，`path()`／`url()` 算不出的记进 `unknown` 并让 `ok=false`（⛔ 没审计不算通过）。
-- `curate_media.mjs`：Met 与 Rijks 的单条详情失败原先被静默丢掉，聚合结果看不出不完整；现在随 `errors` 上抛。
+- `build-recipes.md`「二 列表」前加选型三问：① 用户在挑还是在比——挑用卡片、比用列表，比得动的前提是同一字段对齐成列（八条找「最久没更新」，卡片里视线来回八次，对齐的列一眼扫完）；② 每一项能否单独成立——有封面、标题、能单独打开或拖动才配一张卡，一行字加一个开关用分割线分组；③ 卡里是否又套卡——里层去边框改用键＋分割线。判法：同一批数据切两个变体看哪版更快找到目标项；超过八项又要比某个字段，基本是列表。
+- `build-recipes.md` 卡片节补一条禁令：⛔ 拿卡片包「一行字加一个开关」；原「不强塞卡片」保留。
 
 ## v0.38.0｜2026-11-23 字段分层、转接点、容器宽度与长任务
 
