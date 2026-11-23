@@ -284,6 +284,9 @@ def measure_data(
         name = item["name"]
         if not isinstance(name, str) or not name.strip() or name in names:
             raise ValueError("标注名称必须非空且唯一")
+        # 名称会拼成导出文件名：带 ../ 或分隔符就能写到 --out-dir 之外并覆盖别人的文件（2026-11-23 补）
+        if name != Path(name).name or "/" in name or "\\" in name or name in (".", ".."):
+            raise ValueError(f"标注名称不能含路径分隔符或 ..：{name!r}")
         names.add(name)
         return name
 
@@ -354,6 +357,8 @@ def measure_data(
             )
             target_dir = out if out is not None else base_dir
             out_file = target_dir / f"{name}.png"
+            if out_file.resolve().parent != target_dir.resolve():
+                raise ValueError(f"导出路径越界：{out_file}")
             extracted_files.append((out_file, encode_png_bytes(crop)))
             region["extracted_file"] = str(out_file)
         regions.append(region)

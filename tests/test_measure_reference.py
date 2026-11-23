@@ -81,6 +81,23 @@ class MeasureReferenceTests(unittest.TestCase):
         self.assertEqual(badge_img.getpixel((15, 15))[:3], (210, 120, 60))
         self.assertEqual(badge_img.getpixel((15, 15))[3], 255)
 
+    def test_region_name_with_path_separator_is_rejected(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            png = root / "ref.png"
+            make_test_png(png)
+            out = root / "out"
+            out.mkdir()
+            for name in ("../evil", "a/b", "..", "."):
+                with self.subTest(name=name):
+                    with self.assertRaises(ValueError):
+                        measure_reference.measure_data(
+                            {"reference": "ref.png", "regions": [{"name": name, "kind": "extract", "box": [40, 15, 10, 10]}]},
+                            base_dir=root,
+                            out=out,
+                        )
+                    self.assertEqual(list(out.iterdir()), [])
+
     def test_manifest_mode_writes_measurements_and_annotations_svg(self) -> None:
         manifest = self.folder / "manifest.json"
         out_dir = self.folder / "measured"

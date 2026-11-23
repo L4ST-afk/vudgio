@@ -366,11 +366,14 @@ async function searchMet(query, limit, opts, kind = 'design') {
   // v1 search was retired on 2026-10-01; v1.1 pages results, and each object needs its own request.
   const data = await json(apiUrl('https://collectionapi.metmuseum.org/public/collection/v1.1/search', { q: query, hasImages: 'true', isPublicDomain: 'true', limit: Math.min(limit * 2, 12) }), opts);
   const out = await pool(data.objectIDs ?? [], id => json(`https://collectionapi.metmuseum.org/public/collection/v1/objects/${id}`, opts), 4);
-  return out.flatMap(r => {
+  // 单条详情失败原本被静默丢掉，聚合结果看不出「这批其实不完整」（2026-11-23 补）
+  const failed = out.filter(r => r.status === 'rejected').map(r => `Met 对象详情失败：${r.reason?.message ?? r.reason}`);
+  const items = out.flatMap(r => {
     const o = r.status === 'fulfilled' ? r.value : null;
     if (!o?.isPublicDomain || !o.primaryImage) return [];
     return [{ provider: 'met', sourceId: String(o.objectID), kind, title: o.title || o.objectName || String(o.objectID), detail: [o.objectName, o.artistDisplayName, o.objectDate, o.culture].filter(Boolean).join(' · '), about: [o.medium, o.classification].filter(Boolean).join(' · ').slice(0, 300), license: 'CC0 (Met Open Access, public domain)', licenseUrl: 'https://www.metmuseum.org/policies/image-resources', attribution: `The Metropolitan Museum of Art (${o.objectID})`, pageUrl: o.objectURL, imageUrl: https(o.primaryImage), previewUrl: https(o.primaryImageSmall || o.primaryImage) }];
   });
+  return { items, errors: failed };
 }
 const JAPAN_RIGHTS = { cc0: 'CC0', pdm: 'Public Domain Mark', ccby: 'CC BY 4.0', ccbysa: 'CC BY-SA 4.0' };
 async function searchJapan(query, limit, opts, kind = 'design') {
@@ -401,7 +404,8 @@ async function searchRijks(query, limit, opts, kind = 'design') {
     const number = (o.identified_by ?? []).find(n => n.type === 'Identifier')?.content;
     return { provider: 'rijks', sourceId: id.split('/').pop(), kind, title: (english ?? names[0])?.content ?? number ?? id, detail: [names.find(n => n !== english)?.content, number].filter(Boolean).join(' · ').slice(0, 240), about: (o.referred_to_by ?? []).map(r => r.content).filter(Boolean).join(' · ').slice(0, 300), license: rights ? (rights.includes('/zero/') ? 'CC0' : rights.includes('/mark/') ? 'Public Domain Mark' : rights) : 'Rights not specified in record; check item page', licenseUrl: rights ?? id, attribution: `Rijksmuseum, Amsterdam${number ? ` (${number})` : ''}`, pageUrl: id, imageUrl: `${service}/full/!2400,2400/0/default.jpg`, previewUrl: `${service}/full/!500,500/0/default.jpg` };
   }, 4);
-  return out.flatMap(r => r.status === 'fulfilled' && r.value ? [r.value] : []);
+  const failed = out.filter(r => r.status === 'rejected').map(r => `Rijks 对象详情失败：${r.reason?.message ?? r.reason}`);
+  return { items: out.flatMap(r => r.status === 'fulfilled' && r.value ? [r.value] : []), errors: failed };
 }
 export function interleave(groups, limit) {
   const out = [], seen = new Set();

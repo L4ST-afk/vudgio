@@ -3,6 +3,15 @@
 > This file records **capability and criteria changes only**: what a version can do, how it differs from the previous one, and whether a threshold changed meaning.
 > Internal archaeology (source relationships, brand history, per-date work logs and review process) is kept in an internal file and is not shipped with the package.
 
+## Unreleased · 2026-11-23 — External code review (scripts)
+
+External review (GitHub Copilot CLI, read-only), 0 high / 3 medium / 1 low, all in `scripts/`:
+
+- `measure_reference.py`: `regions[].name` becomes an exported filename, so `../` or a separator could write outside `--out-dir` and overwrite another file. Names containing a separator or `..` are now refused, and the resolved parent is compared with the target directory before writing.
+- `clip_audit.js` measures shadow extent per side: it used `blur + spread` only, so a large offset like `box-shadow: 100px 0 0` was missed and an already clipped shadow still reported `cut: 0`.
+- `clip_audit.js` no longer substitutes the element rectangle for `clip-path`: `circle` / `ellipse` / `inset` / `polygon` use their real bounding boxes, and shapes it cannot resolve (`path()`, `url()`) go into `unknown` and force `ok: false` — not audited is not passed.
+- `curate_media.mjs`: a failed per-object detail request from the Met or Rijks was dropped silently, so an incomplete aggregate looked complete; failures now travel back in `errors`.
+
 ## v0.38.0 · 2026-11-23 — Field layering, boundaries, container widths, long tasks
 
 - `build-recipes.md` form section gains "Field layering: show only what must be filled now": layer by frequency rather than by required-ness; collapsed ≠ hidden (entry visible with the default written out); conditional rows appear on a choice and vanish when the choice reverts; one level only. Acceptance adds: submit on defaults without opening "More options", no gaps or dead grey blocks after reverting, entry still whole at 375px width and 200% font size.

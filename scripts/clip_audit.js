@@ -52,7 +52,15 @@
   }
 
   function shadowExtent(style) {
-    let extent = 0;
+    // 阴影的包围盒 = 元素盒按 spread+blur 外扩后再平移 (offsetX, offsetY)。
+    // 只取 blur+spread 会漏掉偏移那一侧：`box-shadow: 100px 0 0` 的外扩其实是 100px（2026-11-23 补）
+    const sides = { left: 0, top: 0, right: 0, bottom: 0 };
+    const grow = (dx, dy, radius) => {
+      sides.right = Math.max(sides.right, radius + dx);
+      sides.left = Math.max(sides.left, radius - dx);
+      sides.bottom = Math.max(sides.bottom, radius + dy);
+      sides.top = Math.max(sides.top, radius - dy);
+    };
     const box = style.boxShadow && style.boxShadow !== "none" ? style.boxShadow : "";
     for (const part of box.split(/,(?![^(]*\))/)) {
       const nums = part.match(/-?\d+(?:\.\d+)?px/g);
@@ -60,20 +68,71 @@
       const px = nums.map(parseFloat);
       // 顺序：offsetX offsetY [blur] [spread] [color]
       const blur = Math.abs(px[2] || 0), spread = Math.abs(px[3] || 0);
-      extent = Math.max(extent, blur + spread);
+      grow(px[0] || 0, px[1] || 0, blur + spread);
     }
     const filter = style.filter && style.filter.includes("drop-shadow") ? style.filter : "";
     for (const m of filter.matchAll(/drop-shadow\(([^)]*)\)/g)) {
       const px = (m[1].match(/-?\d+(?:\.\d+)?px/g) || []).map(parseFloat);
-      extent = Math.max(extent, Math.abs(px[2] || 0) + 0);
+      grow(px[0] || 0, px[1] || 0, Math.abs(px[2] || 0));
     }
-    return extent;
+    return sides;
   }
 
   function clipBounds(el, clipPath) {
     if (clipPath) {
+      // 圆／椭圆／多边形／inset 都有真实包围盒；拿元素矩形顶替会把形状外已被裁掉的阴影算成可见（2026-11-23 补）
+      const style = getComputedStyle(el);
       const r = el.getBoundingClientRect();
-      return { left: r.left, top: r.top, right: r.right, bottom: r.bottom };
+      const shape = (style.clipPath || "").trim();
+      const len = (tok, base) => {
+        if (!tok) return null;
+        if (tok === "closest-side") return base === "w" ? r.width / 2 : r.height / 2;
+        if (tok.endsWith("%")) return (parseFloat(tok) / 100) * base;
+        if (tok.endsWith("px")) return parseFloat(tok);
+        return null;
+      };
+      const at = (tok, origin, size) => {
+        if (!tok || tok === "center") return origin + size / 2;
+        if (tok.endsWith("%")) return origin + (parseFloat(tok) / 100) * size;
+        if (tok.endsWith("px")) return origin + parseFloat(tok);
+        return null;
+      };
+      const inner = shape.slice(shape.indexOf("(") + 1, shape.lastIndexOf(")"));
+      if (/^circle/i.test(shape) || /^ellipse/i.test(shape)) {
+        const split = inner.split(" at ");
+        const radii = split[0].trim().split(/\s+/).filter(Boolean);
+        const center = (split[1] || "center").trim().split(/\s+/).filter(Boolean);
+        const isEllipse = /^ellipse/i.test(shape);
+        const rx = len(radii[0], "w");
+        const ry = isEllipse ? len(radii[1] || radii[0], "h") : rx;
+        const cx = at(center[0], r.left, r.width);
+        const cy = at(center[1], r.top, r.height);
+        if (rx === null || ry === null || cx === null || cy === null) return null;
+        return { left: cx - rx, top: cy - ry, right: cx + rx, bottom: cy + ry };
+      }
+      if (/^inset/i.test(shape)) {
+        const toks = inner.split(/\s+/).filter(Boolean);
+        const pick = (i, fallback) => toks[i] ?? fallback;
+        const t = len(pick(0, "0px"), "h") ?? 0;
+        const rt = len(pick(1, toks[0] || "0px"), "w") ?? 0;
+        const b = len(pick(2, toks[0] || "0px"), "h") ?? 0;
+        const l = len(pick(3, pick(1, toks[0] || "0px")), "w") ?? 0;
+        return { left: r.left + l, top: r.top + t, right: r.right - rt, bottom: r.bottom - b };
+      }
+      if (/^polygon/i.test(shape)) {
+        const pts = shape.slice(shape.indexOf("(") + 1, shape.lastIndexOf(")")).split(",")
+          .map((tok) => tok.trim().split(/ +/))
+          .filter((pair) => pair.length === 2);
+        const coords = pts.map(([x, y]) => [px(x), px(y)]).filter(([x, y]) => x !== null && y !== null);
+        if (!coords.length) return null;
+        return {
+          left: r.left + Math.min(...coords.map((c) => c[0])),
+          top: r.top + Math.min(...coords.map((c) => c[1])),
+          right: r.left + Math.max(...coords.map((c) => c[0])),
+          bottom: r.top + Math.max(...coords.map((c) => c[1])),
+        };
+      }
+      return null;  // path() / url() 等算不出：交给调用方判为「不可判」
     }
     const style = getComputedStyle(el);
     const r = el.getBoundingClientRect();
@@ -96,7 +155,7 @@
     if (!root) return { cut: 0, checked: 0, items: [], hidden: [], error: "root 不存在：" + opts.root };
 
     let bounds = opts && opts.viewport ? { left: 0, top: 0, right: innerWidth, bottom: innerHeight } : null;
-    const items = [], hidden = [], seen = [];
+    const items = [], hidden = [], seen = [], unknown = [];
     let checked = 0;
 
     for (const el of root.querySelectorAll("*")) {
@@ -113,14 +172,18 @@
         const kind = isClipper(getComputedStyle(p));
         if (kind) {
           const b = clipBounds(p, kind === "clip-path");
-          ancestors = intersect(ancestors, b);
+          if (b === null) {
+            unknown.push({ element: el.tagName.toLowerCase(), by: (p.className || p.tagName).toString(), why: "clip-path 形状算不出包围盒" });
+          } else {
+            ancestors = intersect(ancestors, b);
+          }
           clippedBy = clippedBy || (p.className || p.tagName).toString();
         }
         if (kind === "overflow" && (style.position === "fixed")) break;
       }
       if (opts && opts.viewport) ancestors = intersect({ left: 0, top: 0, right: innerWidth, bottom: innerHeight }, ancestors);
 
-      const target = { left: r.left - extent, top: r.top - extent, right: r.right + extent, bottom: r.bottom + extent };
+      const target = { left: r.left - extent.left, top: r.top - extent.top, right: r.right + extent.right, bottom: r.bottom + extent.bottom };
       const res = cutFor(target, ancestors);
       if (res.hidden) {
         hidden.push({ element: el.tagName.toLowerCase() + (el.className ? "." + String(el.className).split(/\s+/).join(".") : ""), by: clippedBy });
@@ -132,7 +195,8 @@
     const cut = items.reduce((n, it) => n + it.pixels, 0);
     // 回执形状对齐 acceptance.md §1 第 5 条：{ ok, cut }；hidden 一律让 ok 为 false，
     // 因为「完全看不见的阴影」要人复核，⛔ 机器替人放行。
-    return { ok: cut === 0 && hidden.length === 0, cut, checked, items, hidden };
+    // 算不出包围盒的 clip-path 一律让人复核：⛔ 不许把「没审计」算成「通过」
+    return { ok: cut === 0 && hidden.length === 0 && unknown.length === 0, cut, checked, items, hidden, unknown };
   }
 
   const api = { cutFor, clipAudit, shadowExtent };
