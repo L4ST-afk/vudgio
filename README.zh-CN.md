@@ -15,7 +15,7 @@ cd vudgio
 python3 scripts/selftest.py          # 期望 PASS，退出码 0
 ```
 
-自检离线跑、不需要任何凭据。退出码：`0` 通过／`1` 判据不过／`2` 用法或输入错。完整回归命令（15 件测试）见下方「目录」里的 `tests/` 条目。
+自检离线跑、不需要任何凭据。退出码：`0` 通过／`1` 判据不过／`2` 用法或输入错。完整回归命令（17 件测试）见下方「目录」里的 `tests/` 条目。
 
 给 AI Agent 用的**界面设计总承包**：定方向 → 出对比 → 写界面 → 配图 → 动效 → 评 → 交。先定产品事实与这块面的型，收敛到一个方向，按真实画面打磨，最后由没看过制作过程的评审挑问题。
 
@@ -51,7 +51,15 @@ python3 scripts/selftest.py          # 期望 PASS，退出码 0
 
 页里每一条曲线都是 `scripts/spring_to_linear.py` 反解出来的，没有一条手调。想对照手感就打开 `demo/index.html`：每处都能一键切成生硬版（100ms 线性），开关也能自己拨。
 
-重录这段的命令同上（见英文版），四段 mp4 按录制顺序 concat，再用 ffmpeg 转 GIF。
+重录这段（`take_shots.mjs` 逐段录，之后四段 mp4 按录制顺序 concat，再用 ffmpeg 转 GIF）：
+
+```bash
+node scripts/take_shots.mjs demo/index.html --size desktop --record --out demo/shots --hold 700 \
+ --steps "press: click #press-play; wait 260" \
+ --steps "drawer: click #drawer-play; wait 420" \
+ --steps "lift: click #lift-play; wait 320" \
+ --steps "reduced: click #rm; wait 120; click #press-play; wait 260"
+```
 
 ## 工作区
 

@@ -1,10 +1,10 @@
 English · [中文](README.zh-CN.md)
 
-# 浮龟Vudgio
+# 浮龟 Vudgio
 
-Chinese name 浮龟 (fú guī), Latin name Vudgio — the turtle that stays put until the water arrives. Package and directory name are `vudgio`; search either 浮龟 or Vudgio.
+Chinese name 浮龟 (fú guī), Latin name *Vudgio* — the turtle that stays put until the water arrives. Package and directory names both use `vudgio`; search either 浮龟 or Vudgio.
 
-<img src="docs/cover.jpg" alt="浮龟 Vudgio — hexagonal-scale ground, a yellow-green facet at centre, VUDGIO at lower left; inscription: the turtle stays still until the water comes and the type is told apart" width="720">
+<img src="docs/cover.jpg" alt="浮龟 Vudgio — hexagonal-scale ground, a yellow-green facet at centre, VUDGIO at lower left; inscription: the turtle stays still until the water rises and the form is discerned" width="720">
 
 ## Install
 
@@ -15,7 +15,7 @@ cd vudgio
 python3 scripts/selftest.py          # expected: PASS; exit code 0
 ```
 
-The self-check runs offline and needs no credentials. Reading exit codes: `0` = pass, `1` = criterion failed, `2` = usage/input error. For the full regression command (all 15 test modules), see the `tests/` entry under Layout below.
+The self-check runs offline and needs no credentials. Reading exit codes: `0` = pass, `1` = criterion failed, `2` = usage/input error. For the full regression command (all 17 test modules), see the `tests/` entry under Layout below.
 
 An **end-to-end interface design skill** for AI agents: direction → comparison → interface code → imagery → motion → review → delivery. Settle product facts and the surface's mode first, converge on one direction, refine against real screenshots, then have a reviewer who never saw the build process attack it.
 
@@ -47,7 +47,7 @@ It writes pages, components, motion and design assets directly (tokens, icons, p
 
 ![Motion demo](demo/motion-demo.gif)
 
-One page, four segments, recorded from the real page (no mock): button press at 150 ms with 6% overshoot, drawer at 320 ms with `--ease-drawer`, tile lift at 200 ms with 8% overshoot, then the same press again with the "reduce motion" switch on — the action still happens, it just lands at once.
+One page, four segments, recorded from the real page (no mock): button press at 150 ms with 6% overshoot, drawer at 320 ms with `--ease-drawer`, tile lift at 200 ms with 8% overshoot, then the same press again with the reduced-motion switch on — the action still happens, it just lands at once.
 
 Every curve in that page came out of `scripts/spring_to_linear.py`; nothing was hand-picked. Open `demo/index.html` to try the hard-edged version of each one (100 ms linear) and to flip the switch yourself.
 
