@@ -1,5 +1,10 @@
 # Vudgio · Change Log (English)
 
+## v0.39.3 · 2026-11-24 — Source entry: Astryx as a pointer (theme-as-token-layer, customisation ladder)
+
+- `references/sources.md` gains a "new sources (pointer only, not internalised)" row for Astryx, Meta's open-source design system (MIT): two mechanisms — a theme is a set of CSS custom-property overrides that changes everything at once without forking or wrapping component source; and the five-step customisation ladder (use as-is → adjust tokens → `className` → own CSS → eject and own the source).
+- ⛔ Explicitly not taken: its token values, the third-party typefaces of its seven themes, component source, version numbers or install commands (version follows its release page; hardcoding rots). Rationale and boundaries sit in the licence column of that table.
+
 ## v0.39.2 · 2026-11-24 — Glass line back in place; collapsing bar on scroll, long-form paragraph length and refusal/interception folded in
 
 - `references/motion.md` gains "Collapsing bar on scroll": on reading-oriented pages (long articles, docs, decks) a bar sitting on the line being read should slide up on scroll-down and return on scroll-up. Five criteria: (1) yield without disappearing — the whole bar `translateY(-100%)`, ⛔ animate `top`/`height`/`margin` and reflow every frame; (2) always visible at the top of the page (within about two bar heights, or on entry), ⛔ navigation gone the moment the page opens; (3) direction judged by accumulated travel, under 6px is not a turn, and the bottom-of-page bounce ⛔ counts as scroll-up; (4) about 300ms and interruptible, ⛔ replay from the start; (5) under reduced motion, cross-fade or keep it visible. ⛔ A tool workspace shell does not collapse its bar. One acceptance pass included.

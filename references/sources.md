@@ -67,3 +67,13 @@
 | 通用工作法（私有） | （本机，不随包） | 断言账、测量纪律、检查器工程、排版属性行为验证 | 派发档位在私有工作法里，不复制 |
 | 私有评审档 | （本机，不随包） | 四段式中的「诚实缺口」与可证伪性 | 27 条是教学/人际/管理知识，只借格式，不借内容 |
 | web-design-engineer | `<skills 根>/web-design-engineer` | 单文件 HTML/JSX 结构、内联资源、零构建边界 | 只抽一卷，原技能保留 |
+
+---
+
+## 2026-11-24 新增来源（软链，不内化）
+
+| 来源 | 路径 | 取用 | 许可／处理 |
+|---|---|---|---|
+| Astryx（Meta 开源设计系统；Beta） | `https://github.com/meta/astryx`｜文档 `https://astryx.atmeta.com/docs/theme`｜沙盒 `https://astryx.atmeta.com/sandbox/pages/example-cards/` | ① 「主题＝一组 CSS 自定义属性覆盖，改一处全局生效，不 fork 不包裹组件源码」这一条机制，作「要多主题成体系」场合的指路；② 定制阶梯五级（原样用 → 调令牌 → `className` → 自己的 CSS → eject 拥有源码）作「改动越深责任越大」的边界说明 | MIT，Copyright Meta Platforms, Inc.；**只登记指针与机制，⛔ 不搬它的 token 值、七套主题的字体与组件源码**（字体再分发授权另算）；**⛔ 不内化版本号与安装命令**——版本以发行页为准（v0.7.11 之后已到 0.7.17，写死必腐）；与本库主机中立（不装 React／StyleX）的取向不同，故不进判据正文 |
+
+**为什么只软链**：Astryx 的价值在「主题即令牌层」这一条工程取向，而非它的视觉产物；它的七套主题各配第三方字体（Figtree／Fraunces／DM Sans／Playwrite／Poppins／Crimson Text 等），照搬会把授权问题变成法律问题。本卷取机制、留指针，视觉仍自写。
