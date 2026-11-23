@@ -1,6 +1,6 @@
 ---
 name: 浮龟Vudgio
-description: "设计总承包：为网站、App、后台与组件列约束、定判据、求满足解、配图与动效、逐条验收并交付。当用户要设计、重做、改进或评审界面，要比方向与版式，要调排版、间距、动效、配图，或要沉淀设计规范与令牌时使用。可直接写页面、组件、动效与设计资产，不接业务逻辑、接口、数据层，也不用于无界面变化的代码整理，或改法已完全明确的日常改动（改文案、调数量、删指定元素、复用现有样式，哪怕带“优化”字样）。"
+description: "设计总承包：为网站、App、后台与组件列约束、定判据、求满足解、配图与动效、逐条验收并交付。当用户要设计、重做、改进或评审界面，要比方向与版式，要调排版、间距、动效、配图，或要把玻璃/毛玻璃浮层做对，或要沉淀设计规范与令牌时使用。可直接写页面、组件、动效与设计资产，不接业务逻辑、接口、数据层，也不用于无界面变化的代码整理，或改法已完全明确的日常改动（改文案、调数量、删指定元素、复用现有样式，哪怕带“优化”字样）。"
 allowed-tools:
   - Bash(node *take_shots.mjs*)
   - Bash(node *curate_media.mjs*)
@@ -12,8 +12,9 @@ allowed-tools:
   - Bash(python3 *emit_tokens.py*)
   - Bash(python3 *spring_to_linear.py*)
   - Bash(python3 *measure_reference.py*)
+  - Bash(python3 *glass_audit.py*)
 metadata:
-  version: "0.38.0+fugu20261123"
+  version: "0.39.0+fugu20261123"
   compatibility: "核心为宿主中立的文本流程，不依赖其他 Skill 或指定模型。可选脚本需要 Python 3.10+ 标准库或 Node 18+；产物仅需现代浏览器；本机地址候选需要对应的本地开发服务器在运行。实际视觉验收需要看图能力；交互验收需要可操作环境；独立评审需要隔离上下文且能看图的执行者。"
 ---
 
@@ -192,6 +193,7 @@ metadata:
 | 令牌三级解析与生成 | `scripts/emit_tokens.py`／`tests/test_emit_tokens.py` | JSON 基色与派生档齐 |
 | 弹簧值域 4–60 与 3s 截断告警 | `scripts/spring_to_linear.py`／`tests/test_spring_to_linear.py` | 3／61 必 rc=2，4／60 必 rc=0 |
 | 裁切审计 | `scripts/clip_audit.js`／`tests/test_clip_audit.py` | `cut === 0` 且无完全隐藏 |
+| 玻璃判据（屏幕 backdrop ≤3、blur ≤12px、不叠玻璃、不动 blur、三层齐、有降级） | `scripts/glass_audit.py`／`tests/test_glass_audit.py` | 退出码 1＝有 E 级 |
 | 参考图测量与横向比例对齐 | `scripts/measure_reference.py`／`tests/test_measure_reference.py` | 测量值与实际几何一致 |
 | 素材筛选与落盘边界 | `scripts/curate_media.mjs`／`tests/test_curate_media.py` | 只收授权源、不写回源站 |
 | 图片预处理 | `scripts/prep_image.mjs`／`tests/test_prep_image.py` | 输出尺寸与请求一致 |
@@ -211,6 +213,7 @@ metadata:
 - 不知走哪条命令：[路由](references/routing.md)。
 - 要交证据、跑截图：[工具](references/tools.md) 与 [桌面验收](references/acceptance.md)。
 - 要「苹果那种」大圆角：[圆角几何](references/corner-geometry.md)。
+- 页面里有 backdrop-filter／毛玻璃／半透明浮层：[玻璃](references/glass.md)（数值、账目、降级、改法）。
 
 ## 自检（离线）
 

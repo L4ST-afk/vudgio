@@ -3,6 +3,13 @@
 > This file records **capability and criteria changes only**: what a version can do, how it differs from the previous one, and whether a threshold changed meaning.
 > Internal archaeology (source relationships, brand history, per-date work logs and review process) is kept in an internal file and is not shipped with the package.
 
+## v0.39.0 · 2026-11-23 — Glass channel: criteria volume, mechanical gate, trigger-on-detect
+
+- New volume `references/glass.md`: the criteria of record for glass surfaces — the three-layer structure (tint / edge / light), safe ranges for eight values (blur ≤12px, tint alpha .18–.40, edge .35–.70), a same-screen backdrop budget of 3, the T0/T1/T2 tiers with the four degrade signals, no per-frame blur animation, and an explicit list of what cannot be done (real-time reflection, continuous-curvature corners, true refraction only on Chromium).
+- New script `scripts/glass_audit.py`: checks blur over the cap, glass stacked on glass, per-screen over-budget, blur without a tint, missing edge and inner highlight, translucent text on glass, `transition/animation` on backdrop-filter, always-on `will-change`, and missing or single-signal degradation; `--json` for machines, `--tokens` prints a compliant variable block. E-level exits 1.
+- Routing gains a "when glass is detected" section: any `backdrop-filter`, `blur(...)`, translucent card, frosted overlay or glass panel triggers the gate → fix by criteria → re-run, without asking whether to use glass. Only the four failure modes are fixed (blurry, dropping frames, unreadable, grey mush); the user's design direction stays.
+- The criteria table gains a row, and CI plus both READMEs now list 17 regression modules.
+
 ## Unreleased · 2026-11-23 — External code review (scripts)
 
 External review (GitHub Copilot CLI, read-only), 0 high / 3 medium / 1 low, all in `scripts/`:

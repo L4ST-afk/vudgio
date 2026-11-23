@@ -1,5 +1,12 @@
 # 浮龟Vudgio 变更记录
 
+## v0.39.0｜2026-11-23 玻璃通道：判据卷、机械闸、探测即触发
+
+- 新卷 [`references/glass.md`](references/glass.md)：玻璃的判据正本——三层结构（底／描边／光）、八个数值的安全区间（blur ≤12px、tint alpha .18–.40、edge .35–.70）、同屏 backdrop ≤3 的账目、T0/T1/T2 档位与降级四件套、动效禁逐帧 blur，以及「做不到的部分明说」（实时反光、曲率连续圆角、真折射仅 Chromium）。
+- 新脚本 `scripts/glass_audit.py`：静态机判 blur 超限、玻璃叠玻璃、同屏超账、只有 blur 没有底、缺描边与内高光、玻璃上文字过淡、`transition/animation` 动 backdrop、`will-change` 常驻、降级缺失或只押 `prefers-reduced-transparency`；`--json` 机器读，`--tokens` 直接吐一套合规变量块。E 级退出码 1。
+- 路由补「识别到玻璃时」：页面里出现 `backdrop-filter`／`blur(...)`／半透明卡片／磨砂浮层／`frosted`／毛玻璃，**不问要不要做玻璃**，直接跑闸 → 按判据改 → 复跑；只修「会糊、会掉帧、会失读、会叠成灰块」四件，不改用户的设计方向。
+- 判据清单加一行（玻璃判据／`glass_audit.py`／E 级退出码 1），CI 与两份 README 的回归命令同步为 17 件。
+
 ## 未发版｜2026-11-23 外部代码审查（脚本层）
 
 外部审查（GitHub Copilot CLI 只读模式）0 高 3 中 1 低，四处都在 `scripts/`：
