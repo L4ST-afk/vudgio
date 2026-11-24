@@ -34,7 +34,7 @@ def mentioned():
         for f in files:
             if not f.endswith(".md"):
                 continue
-            if f in ("README.md", "README.zh-CN.md", "CHANGELOG.md"):
+            if f in ("README.md", "README.en.md", "CHANGELOG.md"):
                 continue
             text = read(os.path.join(base, f))
             names.update(re.findall(r"scripts/([A-Za-z0-9_.-]+\.(?:py|mjs))", text))

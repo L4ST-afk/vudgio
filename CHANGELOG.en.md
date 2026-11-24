@@ -15,7 +15,7 @@
 ## v0.39.1 · 2026-11-23 — Windows output encoding, tighter CI gate
 
 - `scripts/glass_audit.py` now sets both streams to UTF-8 like every other script: on Windows stdout through a pipe is cp1252, so printing ✓ or Chinese raised `UnicodeEncodeError` and a fully compliant page exited 1 (windows-latest in CI hit exactly this path).
-- `.github/workflows/tests.yml`: top-level `permissions: contents: read`; `paths` now include `README.md`, `README.zh-CN.md` and `demo/**` (the README-reading and demo-reading gate tests did not previously trigger CI); the README's install check `scripts/selftest.py` runs in the core job; all three third-party actions are pinned to commit SHAs with the version kept in a comment.
+- `.github/workflows/tests.yml`: top-level `permissions: contents: read`; `paths` now include `README.md`, `README.en.md` and `demo/**` (the README-reading and demo-reading gate tests did not previously trigger CI); the README's install check `scripts/selftest.py` runs in the core job; all three third-party actions are pinned to commit SHAs with the version kept in a comment.
 
 ## v0.39.0 · 2026-11-23 — Glass channel: criteria volume, mechanical gate, trigger-on-detect
 

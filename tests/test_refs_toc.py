@@ -52,7 +52,7 @@ class TestReferenceToc(unittest.TestCase):
         """宣称卷数要与盘上一致（本轮 54 对 55 的红灯就是缺这条）。"""
         root = os.path.dirname(HERE)
         actual = len([n for n in os.listdir(REFS) if n.endswith(".md")])
-        for f in ("README.md", "README.zh-CN.md"):
+        for f in ("README.md", "README.en.md"):
             with open(os.path.join(root, f), encoding="utf-8") as fh:
                 text = fh.read()
             m = re.search(r"(\d+)\s*(?:卷索引|份参考文档|volumes)", text)

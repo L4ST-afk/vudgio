@@ -7,7 +7,7 @@
 口径：
 - CI 的 `modules = [...]` 三处清单合起来算覆盖；同一件出现在两处（重复跑）不算错，但要显名；
 - `test_ci_coverage.py` 自己豁免（它不测业务）；
-- README 与 README.zh-CN 必须给出同一串命令。
+- README 与 README.en 必须给出同一串命令。
 """
 import os
 import re
@@ -41,7 +41,7 @@ def in_ci():
 
 def in_readme():
     names = {}
-    for f in ("README.md", "README.zh-CN.md"):
+    for f in ("README.md", "README.en.md"):
         line = [l for l in read(os.path.join(ROOT, f)).splitlines() if "python3 -m unittest" in l]
         names[f] = line[0] if line else ""
     return names

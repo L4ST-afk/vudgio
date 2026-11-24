@@ -47,7 +47,7 @@ class TestDemoPage(unittest.TestCase):
         gif = os.path.join(DEMO, "motion-demo.gif")
         self.assertTrue(os.path.exists(gif), "README 引的动图不在盘上")
         self.assertGreater(os.path.getsize(gif), 50 * 1024, "动图小于 50KB，多半是占位或截断")
-        for name in ("README.md", "README.zh-CN.md"):
+        for name in ("README.md", "README.en.md"):
             self.assertIn("demo/motion-demo.gif", read(os.path.join(ROOT, name)), "%s 没引动图" % name)
 
 

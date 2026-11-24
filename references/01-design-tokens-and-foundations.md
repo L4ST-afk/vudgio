@@ -6,8 +6,8 @@
 
 ## 本卷分卷
 
-1. [references/01-design-tokens-and-foundations-1.md](references/01-design-tokens-and-foundations-1.md) — 179 行 · 色彩、边框、圆角、阴影四类底层判据（第 2 步「定达成判据」的机器可读形态）
-2. [references/01-design-tokens-and-foundations-2.md](references/01-design-tokens-and-foundations-2.md) — 38 行 · 间距、字阶两类排版判据（第 2 步「定达成判据」的机器可读形态）
+1. [01-design-tokens-and-foundations-1.md](01-design-tokens-and-foundations-1.md) — 179 行 · 色彩、边框、圆角、阴影四类底层判据（第 2 步「定达成判据」的机器可读形态）
+2. [01-design-tokens-and-foundations-2.md](01-design-tokens-and-foundations-2.md) — 38 行 · 间距、字阶两类排版判据（第 2 步「定达成判据」的机器可读形态）
 
 > ⛔ 子卷文件名、子卷内所有脚本名、命令名、字段名、CSS 变量名与本卷中所有判据句、禁令、边界、阈值一律保留；子卷正文另行按约束满足轴重写，逐字同段经两轮独立复检归零。
 

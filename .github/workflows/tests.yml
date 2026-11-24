@@ -9,7 +9,7 @@ permissions:
 on:
   push:
     branches: [main]
-    paths: ["scripts/**", "tests/**", "assets/**", "references/**", "demo/**", "SKILL.md", "README.md", "README.zh-CN.md", ".github/workflows/tests.yml"]
+    paths: ["scripts/**", "tests/**", "assets/**", "references/**", "demo/**", "SKILL.md", "README.md", "README.en.md", ".github/workflows/tests.yml"]
   pull_request:
     branches: [main]
   workflow_dispatch:
