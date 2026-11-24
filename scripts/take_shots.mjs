@@ -619,8 +619,12 @@ function abortTransport(error) {
 }
 async function connectTransport(url) {
   ws = new WebSocket(url);
+  // error 与 close 在连接被掐断时都会触发，且 error 先到（实测 Node 24：error → close）。
+  // ⛔ 别让 onerror 单独定性：那会把「浏览器被 SIGKILL」报成「连接出错」，
+  // 与 onclose 的说法打架，也让「意外断开」这条判据永远等不到。
+  // 统一交给 onclose 报「意外断开」；连接建立阶段的失败由下面的超时与 failed() 兜。
+  ws.onerror = () => {};
   ws.onclose = () => abortTransport(new Error(`${currentContext}：浏览器连接意外断开，已停止执行；${slowHint()}`));
-  ws.onerror = () => abortTransport(new Error(`${currentContext}：浏览器连接出错，已停止执行；${slowHint()}`));
   await new Promise((ok, no) => {
     const timer = setTimeout(() => { const error = new Error(`连接浏览器：${30 * timeoutScale} 秒内没有响应；${slowHint()}`); error.code = "TRANSPORT_TIMEOUT"; no(error); abortTransport(error); }, timeoutMs(30000));
     ws.onopen = () => { clearTimeout(timer); ok(); };
