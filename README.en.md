@@ -37,7 +37,7 @@ It writes pages, components, motion and design assets directly (tokens, icons, p
 
 ## Layout
 
-- `SKILL.md` — positioning, four modes, 13 commands, seven-step flow, delivery gate, index of 60 volumes (volume index in `references/index.md`), size budget
+- `SKILL.md` — positioning, four modes, 13 commands, seven-step flow, delivery gate, index of 59 volumes (volume index in `references/index.md`), size budget
 - `references/` — fifty-odd volumes of specific criteria, loaded per command and per problem, never end to end; new: `routing`, `craft-floor`, `tokens`, `build-recipes`, `type-and-polish`, `interaction-feel`, `review-rubric`
 - `scripts/` — comparison board, screenshots, media curation, image processing, plus `check_contrast.py` (WCAG gate), `emit_tokens.py` (ramp generation and token export), and `spring_to_linear.py` (spring k/c → CSS `linear()` curve, or `--target 200 --overshoot 8` to solve back from the duration you want), `clip_audit.js` (shadow-clipping audit to paste into the browser; gate is `cut === 0`)
 - `demo/` — `index.html` (the self-demo page: three motions, a hard-edged switch, a reduce-motion toggle) plus `motion-demo.gif` recorded from it

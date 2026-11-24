@@ -2,7 +2,7 @@
 
 # 浮龟Vudgio
 
-中文名浮龟，拉丁名 Vudgio，取「龟伏于器，水未至不动」；包名与目录名一律 `vudgio`，搜「浮龟」或 Vudgio 都能找到。
+中文名浮龟，拉丁名 Vudgio，取「龟伏于器，水未至不动」；包名与目录名一律 `vudgio`，搜「浮龟」或 Vudgio 都能找到。名字只记取义，不影响任何判据。
 
 <img src="docs/cover.jpg" alt="浮龟 Vudgio — 六边鳞格底、中央一颗黄绿棱石、左下 VUDGIO；题诗「龟伏于器，水未至不动，型未辨不发」" width="720">
 
@@ -37,7 +37,7 @@ python3 scripts/selftest.py          # 期望 PASS，退出码 0
 
 ## 目录
 
-- `SKILL.md`：定位、四型、13 条命令、七步主流程、交付前的检查、60 份参考文档的索引（在 `references/index.md`）、篇幅预算
+- `SKILL.md`：定位、四型、13 条命令、七步主流程、交付前的检查、59 份参考文档的索引（在 `references/index.md`）、篇幅预算
 - `references/`：五十余份专项判据，按命令先读几份、按问题顺带查，不要求通读；新增 `routing` / `craft-floor` / `tokens` / `build-recipes` / `type-and-polish` / `interaction-feel` / `review-rubric`
 - `scripts/`：对比页生成、截图、素材检索、图片处理，以及 `check_contrast.py`（WCAG 门）、`emit_tokens.py`（色阶 + 令牌导出）、`spring_to_linear.py`（弹簧 k/c → CSS `linear()` 曲线；也可 `--target 200 --overshoot 8` 从想要的时长反解）、`clip_audit.js`（阴影裁切审计，贴进浏览器执行，判据 `cut === 0`）
 - `demo/`：`index.html`（自我示范页：三处动效、生硬版对照开关、减少动态效果开关）与从它录出来的 `motion-demo.gif`
