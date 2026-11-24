@@ -10,11 +10,12 @@ allowed-tools:
   - Bash(python3 *check_contrast.py*)
   - Bash(python3 *audit_palette.py*)
   - Bash(python3 *emit_tokens.py*)
+  - Bash(python3 *motion_audit.py*)
   - Bash(python3 *spring_to_linear.py*)
   - Bash(python3 *measure_reference.py*)
   - Bash(python3 *glass_audit.py*)
 metadata:
-  version: "0.39.3+fugu20261124"
+  version: "0.39.6+fugu20261125"
   compatibility: "核心为宿主中立的文本流程，不依赖其他 Skill 或指定模型。可选脚本需要 Python 3.10+ 标准库或 Node 18+；产物仅需现代浏览器；本机地址候选需要对应的本地开发服务器在运行。实际视觉验收需要看图能力；交互验收需要可操作环境；独立评审需要隔离上下文且能看图的执行者。"
 ---
 
@@ -190,7 +191,8 @@ metadata:
 |---|---|---|
 | 对比度地板（正文 ≥4.5、次要 ≥3） | `scripts/check_contrast.py`／`tests/test_check_contrast.py` | 退出码 1＝不过 |
 | 色板成对判据（色阶累计漂移 ≤30°、同侧色相不许停级、角色色 ΔL* ≥10、不落 15–40° 暧昧带；功能色可登记 waivers 换轴，须写明两轴依据） | `scripts/audit_palette.py`／`tests/test_audit_palette.py` | 退出码 1＝不过；登记不合格或失效的豁免计提醒 |
-| 令牌三级解析与生成 | `scripts/emit_tokens.py`／`tests/test_emit_tokens.py` | JSON 基色与派生档齐 |
+| 令牌三级解析与生成 | `scripts/emit_tokens.py`／`tests/test_emit_tokens.py` | JSON 基色与派生档齐；`theme.css` 带 `--ease-*` |
+| 动效参数越层（组件里现场挑缓动/时长） | `scripts/motion_audit.py`／`tests/test_motion_audit.py` | 退出码 1＝有发现；`--json` 出标记卡草稿 |
 | 弹簧值域 4–60 与 3s 截断告警 | `scripts/spring_to_linear.py`／`tests/test_spring_to_linear.py` | 3／61 必 rc=2，4／60 必 rc=0 |
 | 裁切审计 | `scripts/clip_audit.js`／`tests/test_clip_audit.py` | `cut === 0` 且无完全隐藏 |
 | 玻璃判据（屏幕 backdrop ≤3、blur ≤12px、不叠玻璃、不动 blur、三层齐、有降级） | `scripts/glass_audit.py`／`tests/test_glass_audit.py` | 退出码 1＝有 E 级 |
@@ -221,6 +223,7 @@ metadata:
 python3 scripts/selftest.py
 python3 scripts/check_contrast.py --pair '#111111' '#ffffff'
 python3 scripts/emit_tokens.py --base '#0f7b6c' --json
+python3 scripts/motion_audit.py --root .
 cd tests && python3 -m unittest discover
 ```
 

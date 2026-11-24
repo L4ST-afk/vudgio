@@ -1,5 +1,14 @@
 # 浮龟Vudgio 变更记录
 
+## v0.39.6｜2026-11-25 动效参数落令牌层（含 0.39.4／0.39.5 正文两条一并公开）
+
+- `scripts/emit_tokens.py`：`theme.css`（Tailwind v4 `@theme`）除色阶外同时写 `--ease-out`／`--ease-in-out`／`--ease-drawer`。v4 的 `ease-*` 工具类就从 `--ease-*` 命名空间取名，写 `class="ease-out"` 与写 `var(--ease-out)` 落同一条曲线——命名空间给到，「顺手挑一条」就没有借口了。
+- 新脚本 `scripts/motion_audit.py`：静态查七件事——`transition: all`、`scale(0)` 入场、单向 `ease-in`、字面量 `cubic-bezier`、字面量时长、动 `width/height/top/left` 一类布局属性、有过渡却缺 `prefers-reduced-motion`。七条都对应既有禁令，不新造阈值；退出码 1＝有发现，`--json` 直接吐标记卡草稿（字段与 review-animations 的 `MARKER-CARD.md` 对齐）。降级块里规范自己规定的 `1ms !important` 与 `tokens.css` 本身不乱报。
+- `references/tokens.md`：动效令牌一节补两条——主题命名空间已带 `--ease-*`（无 CSS 变量的宿主抄成原生常量表，⛔ 逐处手填）；弹簧解出的 `linear()` 先存成令牌再引用，⛔ 原样贴进组件样式。另加体检入口与「静态定位不代替渲染验收」的口径。
+- `references/motion.md`：三条缓动块后补一句 Tailwind 项目落点与体检命令。
+- 判据清单加一行（动效参数越层／`motion_audit.py`／退出码 1＝有发现），CI 与两份 README 的回归清单同步为 18 件（新增 `tests/test_motion_audit.py`，10 例）。
+- 并入：0.39.4 博物馆配色「采→派→让→验」四步、0.39.5 交付说明的读者视角，此前只记在内部沿革，本版一并进公开记录。
+
 ## v0.39.3｜2026-11-24 来源登记：Astryx 软链（主题即令牌层、定制阶梯）
 
 - `references/sources.md` 新增「2026-11-24 新增来源（软链，不内化）」：登记 Astryx（Meta 开源设计系统，MIT）两条机制——主题＝一组 CSS 自定义属性覆盖、改一处全局生效且不 fork 不包裹组件源码；定制阶梯五级（原样用 → 调令牌 → `className` → 自己的 CSS → eject 拥有源码）。

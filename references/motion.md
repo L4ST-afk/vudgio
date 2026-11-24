@@ -63,6 +63,8 @@
 --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
 ```
 
+Tailwind 项目里这三条由 `theme.css` 的 `@theme` 一并给出（`--ease-*` 命名空间），组件只写 `ease-out` 这类工具类；令牌摆在眼前却还各写各的，跑 `python3 scripts/motion_audit.py --root <项目>` 揪出来。令牌口径见 [令牌](tokens.md)「动效令牌」。
+
 ## 手感：用实物定参数
 
 手感从方向的材质与调性推出。命名与选参数（弹簧刚度／阻尼）都用「动作＋实物」。

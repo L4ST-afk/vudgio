@@ -68,12 +68,16 @@
 
 CSS 变量名与取值**不得改动**（字段名保留）。
 
+`emit_tokens.py` 写出的 `theme.css`（Tailwind v4 `@theme`）里同样带这三条 `--ease-*`：v4 的 `ease-*` 工具类就是从 `--ease-*` 命名空间取名，写 `class="ease-out"` 和写 `var(--ease-out)` 落的是同一条曲线。Tailwind 项目里因此没有「顺手挑一条」的借口——命名空间已经给到。没有 CSS 变量的宿主（SwiftUI、Framer、原生 App），把同一组参数抄成一份原生常量表，⛔ 逐处手填。
+
 **有弹簧手感就要有曲线文件，⛔ 靠感觉写 `cubic-bezier`。** 按目标时长反解，命令直接吐 CSS：
 
 ```bash
 python3 scripts/spring_to_linear.py --target 200 --overshoot 8   # 200ms 落定、过冲 8%
 python3 scripts/spring_to_linear.py --preset 咔嗒 --json         # 复现材质手感
 ```
+
+解出来的曲线存成令牌再引用（如 `--ease-spring-settle: linear(...)`），⛔ 把 `linear(...)` 原样贴进组件样式——那等于把弹簧退回成一次性的手填。
 
 脚本名 `scripts/spring_to_linear.py` 与参数 `--target` / `--overshoot` / `--preset` 不得改动。输出 `linear(...)` 与一条 `cubic-bezier` 退路（不支持 `linear()` 的浏览器用）。⚠️ 手感表里的 k/c 是**材质倾向**，不是时长：咔嗒档积分出来落定约 0.93s，已越过「界面元素 <300ms」，所以按钮上要的是 `--target`，不是 `--preset`。（数值 0.93s / 300ms 不得改动）
 
@@ -86,7 +90,9 @@ python3 scripts/spring_to_linear.py --preset 咔嗒 --json         # 复现材�
 }
 ```
 
-媒体查询名 `prefers-reduced-motion` 与类名 `.reveal` 不得改动。内容与操作一样不少，只是直接到位；⛔ 用它把需要的信息藏起来。（⛔ 禁令）
+媒体查询名 `prefers-reduced-motion` 与类名 `.reveal` 不得改动。
+
+**参数层有没有被绕过，跑体检**：`python3 scripts/motion_audit.py --root <项目目录>`。它查的七条都对应上面已有的禁令（`transition: all`、`scale(0)`、单向 `ease-in`、字面量 `cubic-bezier`、字面量时长、动布局属性、有过渡却缺 `prefers-reduced-motion`）；退出码 1＝有发现，`--json` 给标记卡草稿（字段与 review-animations 的 `MARKER-CARD.md` 对齐）。它只做静态定位，⛔ 不代替渲染验收；报出来的东西仍要人看一眼才算数。内容与操作一样不少，只是直接到位；⛔ 用它把需要的信息藏起来。（⛔ 禁令）
 
 ## 生成色阶（禁手调）
 

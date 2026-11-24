@@ -174,6 +174,10 @@ def write_theme(name: str, ramp: dict, out: str) -> str:
     lines = ["/* Tailwind v4：v3 请改成 tailwind.config.js 的 theme.extend */", "@theme {"]
     for stop, hexv in ramp.items():
         lines.append("  --color-%s-%s: %s;" % (name, stop, hexv))
+    # 缓动也进 @theme：v4 的 ease-* 工具类从 --ease-* 取名空间取，不写进这里
+    # 组件就会各自现场挑曲线（tokens.md「⛔ 逐个组件现场挑」那一条的成因）。
+    for k, v in MOTION.items():
+        lines.append("  --%s: %s;" % (k, v))
     lines.append("}")
     p = os.path.join(out, "theme.css")
     open(p, "w", encoding="utf-8").write("\n".join(lines) + "\n")

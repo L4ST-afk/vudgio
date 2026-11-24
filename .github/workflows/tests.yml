@@ -69,7 +69,7 @@ jobs:
           python - <<'PY'
           import os, sys, unittest
           sys.path.insert(0, os.path.abspath("tests"))
-          modules = ["test_check_contrast", "test_emit_tokens", "test_audit_palette", "test_clip_audit", "test_measure_reference", "test_curate_media", "test_workdir", "test_spring_to_linear", "test_refs_toc", "test_refs_auth", "test_demo_page", "test_squircle_path", "test_glass_audit", "test_ci_coverage"]
+          modules = ["test_check_contrast", "test_emit_tokens", "test_audit_palette", "test_clip_audit", "test_measure_reference", "test_curate_media", "test_workdir", "test_spring_to_linear", "test_refs_toc", "test_refs_auth", "test_demo_page", "test_squircle_path", "test_glass_audit", "test_ci_coverage", "test_motion_audit"]
           suite = unittest.defaultTestLoader.loadTestsFromNames(modules)
           result = unittest.TextTestRunner(verbosity=2).run(suite)
           sys.exit(not result.wasSuccessful())

@@ -1,5 +1,14 @@
 # Vudgio · Change Log (English)
 
+## v0.39.6 · 2026-11-25 — Motion parameters become a token layer (with the 0.39.4/0.39.5 prose rules now public)
+
+- `scripts/emit_tokens.py`: `theme.css` (Tailwind v4 `@theme`) now carries `--ease-out` / `--ease-in-out` / `--ease-drawer` next to the colour ramp. In v4 the `ease-*` utilities read from the `--ease-*` namespace, so `class="ease-out"` and `var(--ease-out)` resolve to the same curve — with the namespace in place there is no excuse for picking a curve on the spot.
+- New `scripts/motion_audit.py`: a static check for seven things — `transition: all`, `scale(0)` entrances, one-way `ease-in`, literal `cubic-bezier`, literal durations, animating layout properties (`width`/`height`/`top`/`left`), and transitions without `prefers-reduced-motion`. Every rule maps to an existing prohibition; no new thresholds. Exit 1 means findings; `--json` emits marker-card drafts whose fields line up with review-animations' `MARKER-CARD.md`. The prescribed `1ms !important` inside the reduced-motion block and `tokens.css` itself are not reported.
+- `references/tokens.md`: two additions to the motion-token section — the theme namespace already carries `--ease-*` (hosts without CSS variables copy the same numbers into a native constant table, ⛔ filling them in per widget); a spring's `linear()` is stored as a token and referenced, ⛔ pasted straight into component styles. The audit entry point and the "static location only, no substitute for rendered acceptance" line are added too.
+- `references/motion.md`: one sentence after the three easing tokens about the Tailwind landing point and the audit command.
+- Criteria table gains a row (motion parameters bypassing the token layer / `motion_audit.py` / exit 1 on findings); CI and both READMEs move to 18 modules (new `tests/test_motion_audit.py`, 10 cases).
+- Folded in: the 0.39.4 museum-colour "sample → derive → yield → verify" four steps and the 0.39.5 reader-perspective delivery note, previously recorded internally only.
+
 ## v0.39.3 · 2026-11-24 — Source entry: Astryx as a pointer (theme-as-token-layer, customisation ladder)
 
 - `references/sources.md` gains a "new sources (pointer only, not internalised)" row for Astryx, Meta's open-source design system (MIT): two mechanisms — a theme is a set of CSS custom-property overrides that changes everything at once without forking or wrapping component source; and the five-step customisation ladder (use as-is → adjust tokens → `className` → own CSS → eject and own the source).
