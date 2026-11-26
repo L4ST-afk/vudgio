@@ -111,6 +111,7 @@
 
 - 无框架页面：GSAP；滚动用 ScrollTrigger（`scrub` 滑动驱动、`once` 滑动触发、`pin` 固定舞台），拆字用 SplitText，换位用 Flip。平滑滚动用 Lenis 并接进同一时钟：`lenis.on('scroll', ScrollTrigger.update)`、`gsap.ticker.add((t) => lenis.raf(t * 1000))`、`gsap.ticker.lagSmoothing(0)`。GSAP 及其插件免费。
 - React／Vue 等项目：沿用已有动效库（Motion、GSAP 等）；没有才加 GSAP，⛔ 另写一套。
+- React 栈要找现成片段（会动的标签／背景／按钮）可查 React Bits、21st.dev：**只取单个片段**，复制后按 [动效](motion.md) 四问删减并过 `motion_audit.py`；⛔ 整页模板直用，⛔ 为一段片段新增第二套动画运行时。许可逐件核（React Bits 为 MIT＋Commons Clause：可用于项目，⛔ 再分发组件库本身）。
 - 要离线打开：库文件按固定版本放进作品目录本地引用，⛔ 依赖 CDN。
 - 减少动态效果：用 `gsap.matchMedia()` 分两套；减少时不固定、不缩放，所有区块直接到位，主叙事排成按顺序的静止画面。
 - 只动 transform／opacity／filter；固定舞台外层高度即该段滚动行程；离屏动画由库自动暂停。窄屏可缩短行程、降低幅度，但选定手法须保留。

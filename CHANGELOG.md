@@ -1,5 +1,17 @@
 # 浮龟Vudgio 变更记录
 
+## 未发版｜2026-11-26 README 去掉旧分发形态的交代
+
+- `README.md`／`README.en.md`「维护与判据来源」段：删掉「销售话术与完整版推荐机制已移除」这半句（英文件删对应 clause）。本目录早已独立维护，对外文档不必交代曾经有过销售／完整版那套东西——留着这半句，等于每读一次 README 就把旧机制再提一遍。
+- 只动这一处措辞：工作区目录、外部服务声明、判据来源与许可署名一字未改。
+- 顺带补一处漏账：两份 README 的卷数宣称 59 → 60。盘上 `references/` 已是 60 卷（`approval-and-consent.md` 由 11-25 批进库），进库时没跟着改宣称，`tests/test_refs_toc.py` 因此在正本红一条；本次推镜像前先补平。`references/index.md` 仍缺该卷一行——不在闸内，留给下一次卷册整理时一并补。
+
+## v0.39.7｜2026-11-25 动效工具只登记入口
+
+- `references/sources.md` 新增「2026-11-25 动效工具指针」：GSAP、Lenis、React Bits、21st.dev 四条，全按「只登记入口、⛔ 内化用法」处理。GSAP／Lenis 本卷早有判据（GSAP 是原生不可用时的合格 fallback；Lenis 只算滚动手感、⛔ 算作动效），不进正文；真正新增的是 React 栈的片段取材入口。
+- `references/scroll-narrative.md`「实现约束」补一条取材纪律：**只取单个片段**，复制后按四问删减并过 `motion_audit.py`；⛔ 整页模板直用，⛔ 为一段片段新增第二套动画运行时。许可逐件核（React Bits 为 MIT＋Commons Clause，可用于项目、⛔ 再分发组件库本身；21st.dev 为聚合平台）。
+- 边界：⛔ 因多了几个链接就放松「原生优先、一上手就上库」；⛔ 把库的默认参数当判据。
+
 ## v0.39.6｜2026-11-25 动效参数落令牌层（含 0.39.4／0.39.5 正文两条一并公开）
 
 - `scripts/emit_tokens.py`：`theme.css`（Tailwind v4 `@theme`）除色阶外同时写 `--ease-out`／`--ease-in-out`／`--ease-drawer`。v4 的 `ease-*` 工具类就从 `--ease-*` 命名空间取名，写 `class="ease-out"` 与写 `var(--ease-out)` 落同一条曲线——命名空间给到，「顺手挑一条」就没有借口了。

@@ -77,3 +77,17 @@
 | Astryx（Meta 开源设计系统；Beta） | `https://github.com/meta/astryx`｜文档 `https://astryx.atmeta.com/docs/theme`｜沙盒 `https://astryx.atmeta.com/sandbox/pages/example-cards/` | ① 「主题＝一组 CSS 自定义属性覆盖，改一处全局生效，不 fork 不包裹组件源码」这一条机制，作「要多主题成体系」场合的指路；② 定制阶梯五级（原样用 → 调令牌 → `className` → 自己的 CSS → eject 拥有源码）作「改动越深责任越大」的边界说明 | MIT，Copyright Meta Platforms, Inc.；**只登记指针与机制，⛔ 不搬它的 token 值、七套主题的字体与组件源码**（字体再分发授权另算）；**⛔ 不内化版本号与安装命令**——版本以发行页为准（v0.7.11 之后已到 0.7.17，写死必腐）；与本库主机中立（不装 React／StyleX）的取向不同，故不进判据正文 |
 
 **为什么只软链**：Astryx 的价值在「主题即令牌层」这一条工程取向，而非它的视觉产物；它的七套主题各配第三方字体（Figtree／Fraunces／DM Sans／Playwrite／Poppins／Crimson Text 等），照搬会把授权问题变成法律问题。本卷取机制、留指针，视觉仍自写。
+
+---
+
+## 2026-11-25 动效工具指针（只登记入口，⛔ 内化用法）
+
+| 来源 | 路径 | 取用 | 许可／处理 |
+|---|---|---|---|
+| GSAP | `https://gsap.com/`｜`https://github.com/greensock/GSAP` | 本卷已在 [滚动叙事](scroll-narrative.md)「实现约束」把它当库方案（ScrollTrigger 的 scrub／once／pin、SplitText、Flip，与 Lenis 接同一时钟）；此处只补入口，⛔ 不新增用法 | 以官方授权页为准（免费范围随版本变动，⛔ 写死结论） |
+| Lenis | `https://github.com/darkroomengineering/lenis` | 平滑滚动件；判据仍是「只改善手感、⛔ 算作动效」，后台／表单／长文档不开全局 | MIT |
+| React Bits | `https://reactbits.dev/`｜`https://github.com/DavidHDev/react-bits` | **React 栈**的组件级动效片段参考源：会动的标签、背景、按钮可作取材，取回后按四问删减 | MIT ＋ Commons Clause：可用于自己的项目，⛔ 不得把组件库本身再分发或售卖；部分材质另引第三方（Paper Shaders Apache 2.0 等），逐件看 NOTICE |
+| 21st.dev | `https://21st.dev/` | React／Tailwind 片段检索，作 React Bits 的替代源；同一套取材纪律 | 平台聚合，许可逐件核；⛔ 整页模板直用 |
+
+**为什么只登记**：这条清单里前两件本卷早就有判据（GSAP 是合格 fallback、Lenis 只算手感），真正新增的只有「React 栈去哪找现成片段」这一个取材入口。⛔ 因为多了三个链接就放松「原生优先、一上手就上库」的禁令；⛔ 为用某段片段而给项目新增第二套动画运行时。
+
