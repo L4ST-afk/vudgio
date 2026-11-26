@@ -734,14 +734,18 @@ async function open(url, wait = Number(opt.wait)) {
       timer = setTimeout(ok, timeoutMs(15000));
     });
     try {
-      let nav, retried = false;
-      try { nav = await cdp("Page.navigate", { url }); }
-      catch (error) {
-        if (error.code !== "NAVIGATION_TIMEOUT") throw error;
-        retried = true; await sleep(300); nav = await cdp("Page.navigate", { url });
+      // 被取消或超时都不等于打不开：浏览器自己的导航偶尔会打断这一次，补试有上限。
+      // 超时只补一次；ERR_ABORTED 最多补两次——Edge/Windows 上第一次补试可能仍被前一次导航的收尾打断。
+      let nav, timeoutRetries = 0, abortRetries = 0;
+      for (;;) {
+        try { nav = await cdp("Page.navigate", { url }); }
+        catch (error) {
+          if (error.code !== "NAVIGATION_TIMEOUT" || timeoutRetries >= 1) throw error;
+          timeoutRetries += 1; await sleep(300); continue;
+        }
+        if (!nav.errorText || !/ERR_ABORTED/.test(nav.errorText) || abortRetries >= 2) break;
+        abortRetries += 1; await sleep(300 * abortRetries);
       }
-      // 被取消或超时都不等于打不开：浏览器自己的导航偶尔会打断这一次，只补试一次。
-      if (!retried && nav.errorText === "net::ERR_ABORTED") { await sleep(300); nav = await cdp("Page.navigate", { url }); }
       if (nav.errorText) throw new Error(`打不开 ${url}：${nav.errorText}`);
       await loaded;
       await evaluate(`document.fonts ? document.fonts.ready.then(() => true) : true`);

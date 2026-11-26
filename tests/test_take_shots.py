@@ -1721,7 +1721,10 @@ document.querySelector('#go').onclick=()=>document.body.style.background='#15151
         result = subprocess.run([NODE, str(SCRIPT), f'http://127.0.0.1:{server.server_port}/page', '--out', str(output)],
                                 cwd=ROOT, env=self.env, capture_output=True, text=True, encoding='utf-8', timeout=90)
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-        self.assertEqual(len(requests), 2, requests)
+        # 补试下限一次、上限两次：Edge/Windows 上第一次补试可能仍被上一条导航的收尾打断（2026-11-26 CI 实锤），
+        # 所以只约束「至少补过一次」，不钉死成恰好两次。
+        self.assertGreaterEqual(len(requests), 2, requests)
+        self.assertLessEqual(len(requests), 3, requests)
         self.assert_artifacts(output, ('page.png', 'report.json'))
 
     def test_navigation_timeout_retries_only_once(self):

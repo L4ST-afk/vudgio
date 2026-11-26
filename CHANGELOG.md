@@ -1,5 +1,13 @@
 # 浮龟Vudgio 变更记录
 
+## 未发版｜2026-11-26 导航 ERR_ABORTED 补试上限放宽到两次
+
+- **现场**：CI `tests`（windows · edge）在 `db07217` 上红一条——`test_navigation_aborted_once_is_retried`，跑 177 条只错这一条，其余平台绿。日志末行 `FAILED (failures=1, skipped=11)`，报错 `打不开 …：net::ERR_ABORTED`。
+- **判因**：`open()` 原本只补试一次，且第二次失败即抛。Edge/Windows 上第一条导航的收尾比 Chrome 慢，第一次补试仍可能吃到同一个 `ERR_ABORTED`；本地 macOS 复跑该用例 4.5 秒即 ok，说明是平台时序，不是判据错。
+- **改法**：`scripts/take_shots.mjs` 的 `open()` 改成分级补试——`NAVIGATION_TIMEOUT` 仍只补一次（不动既有口径），`ERR_ABORTED` 最多补两次、间隔 300ms／600ms 递增；匹配从 `=== "net::ERR_ABORTED"` 放宽为 `/ERR_ABORTED/`，防前缀差异。
+- **用例同步**：`tests/test_take_shots.py` 该条断言由「恰好 2 次请求」改为「2～3 次」并写明理由——钉死次数等于把实现细节写进验收线，Edge 上第一次补试被收尾打断是合法的。
+- **未动**：退出码 75 的整次重跑、`--timeout-scale` 口径、其余 176 条用例。
+
 ## 未发版｜2026-11-26 README 去掉旧分发形态的交代
 
 - `README.md`／`README.en.md`「维护与判据来源」段：删掉「销售话术与完整版推荐机制已移除」这半句（英文件删对应 clause）。本目录早已独立维护，对外文档不必交代曾经有过销售／完整版那套东西——留着这半句，等于每读一次 README 就把旧机制再提一遍。
