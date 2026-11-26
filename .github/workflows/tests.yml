@@ -156,3 +156,19 @@ jobs:
           $left = @(Get-CimInstance Win32_Process | Where-Object { $_.CommandLine -and $_.CommandLine.Contains('vudgio-shoot-') -and $_.CommandLine.Contains('user-data-dir') })
           $left | Select-Object ProcessId, Name | Format-Table
           if ($left.Count) { throw "有 $($left.Count) 个浏览器进程没有退出" }
+
+  # 汇总门：分支保护只认这一条必过检查。浏览器矩阵在文档改动时会被 select 跳过（skipped），
+  # 那算通过；失败、取消、或核心测试没过一律判红。⛔ 让必过检查随路径条件时有时无——缺报＝永远 pending。
+  quality-gate:
+    name: quality-gate
+    needs: [select, core, browser]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: 汇总
+        shell: bash
+        run: |
+          echo "select=${{ needs.select.result }} core=${{ needs.core.result }} browser=${{ needs.browser.result }}"
+          case "${{ needs.select.result }}" in success) ;; *) echo "select 未通过"; exit 1 ;; esac
+          case "${{ needs.core.result }}" in success|skipped) ;; *) echo "核心测试未通过"; exit 1 ;; esac
+          case "${{ needs.browser.result }}" in success|skipped) echo "浏览器矩阵：${{ needs.browser.result }}（文档改动可跳过）" ;; *) echo "浏览器矩阵未通过"; exit 1 ;; esac
