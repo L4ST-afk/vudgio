@@ -1,5 +1,13 @@
 # 浮龟Vudgio 变更记录
 
+## 未发版｜2026-11-27 分支保护生效：加汇总门 quality-gate
+
+- **问题**：main 此前没有分支保护，任何人都能直推；`somnians` 那边虽有必过检查，但 `enforce_admins` 关着，管理员推的时候远端只回一句 `Bypassed rule violations` 就放行——保护形同虚设。
+- **本仓改法**：`tests.yml` 末尾加 `quality-gate` 汇总 job（`needs: [select, core, browser]`、`if: always()`）：核心测试与 select 必须 success，浏览器矩阵 success 或 skipped（文档改动时 `select` 会跳过它）算过，failure／cancelled 一律红。
+- **为什么必须汇总**：浏览器四条 job 受路径条件控制，文档 PR 里根本不报。直接把它们设成必过检查，缺报＝永远 pending，PR 永远合不了。
+- **配套**：main 分支保护改为 required `quality-gate`、`strict: true`、`enforce_admins: true`；此后本仓一律走 PR，直推 main 会被远端拒——这是预期，⛔ 关掉保护换顺手。
+- **未动**：判据、卷册、脚本与其余 job。
+
 ## 未发版｜2026-11-26 导航 ERR_ABORTED 补试上限放宽到两次
 
 - **现场**：CI `tests`（windows · edge）在 `db07217` 上红一条——`test_navigation_aborted_once_is_retried`，跑 177 条只错这一条，其余平台绿。日志末行 `FAILED (failures=1, skipped=11)`，报错 `打不开 …：net::ERR_ABORTED`。
